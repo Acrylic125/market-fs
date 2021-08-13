@@ -1,0 +1,3 @@
+echo Starting Backend (Express)...
+cd market-backend
+cmd /c nodemon index.js

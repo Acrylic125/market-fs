@@ -1,0 +1,3 @@
+echo Starting React App...
+cd market-react-app
+cmd /c npm start

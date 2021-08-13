@@ -8,6 +8,10 @@ app.use((req, resp, next) => {
     next();
 })
 
+app.get('/:id&test', (req, resp) => {
+    console.log(req.params);
+});
+
 app.get('/', (req, resp) => {
     resp.json({
         name: "ABC",
