@@ -1,4 +1,4 @@
-import Item, { ItemB } from "./item";
+import Item from "./item";
 
 export default interface ItemType<T extends Item> {
     id: string;
