@@ -3,8 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var postgres_1 = __importDefault(require("./db/postgres"));
 var express_1 = __importDefault(require("express"));
 var app = express_1.default();
+postgres_1.default.once('connection', function () {
+    console.log("Test");
+});
+// pool.query("CREATE DATABASE marketdb;", (err, resp) => {
+// });
 // import express from "express";
 // var app = express();
 // const PORT = process.env.PORT || 5000;

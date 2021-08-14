@@ -2,6 +2,12 @@ import pool from './db/postgres';
 import express from "express";
 var app = express();
 
+pool.once('connection', () => {
+    console.log("Test");
+})
+// pool.query("CREATE DATABASE marketdb;", (err, resp) => {
+    
+// });
 
 // import express from "express";
 // var app = express();

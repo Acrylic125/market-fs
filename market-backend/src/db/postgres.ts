@@ -1,5 +1,6 @@
 import { Pool, PoolConfig } from 'pg';
 import fs from 'fs';
+import { prependPathWithRoot } from '../env';
 
 const KEY_DB_NAME = "db-name";
 const KEY_DB_USERNAME = "db-username";
@@ -9,7 +10,7 @@ const KEY_DB_PORT = "db-port";
 
 // Load this synchronously for startup purposes.
 function loadInDBConfig(): PoolConfig {
-    const configRaw = fs.readFileSync('../../db-conf.json');
+    const configRaw = fs.readFileSync(prependPathWithRoot('db-conf.json'));
     const config = JSON.parse(configRaw.toString());
     return {
         user: config[KEY_DB_USERNAME],

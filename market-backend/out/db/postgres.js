@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var pg_1 = require("pg");
 var fs_1 = __importDefault(require("fs"));
+var env_1 = require("../env");
 var KEY_DB_NAME = "db-name";
 var KEY_DB_USERNAME = "db-username";
 var KEY_DB_PASSWORD = "db-password";
@@ -12,7 +13,7 @@ var KEY_DB_HOST = "db-host";
 var KEY_DB_PORT = "db-port";
 // Load this synchronously for startup purposes.
 function loadInDBConfig() {
-    var configRaw = fs_1.default.readFileSync('../../db-conf.json');
+    var configRaw = fs_1.default.readFileSync(env_1.prependPathWithRoot('db-conf.json'));
     var config = JSON.parse(configRaw.toString());
     return {
         user: config[KEY_DB_USERNAME],
