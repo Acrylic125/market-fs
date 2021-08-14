@@ -1,18 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var express = require('express');
 var app = express();
-
-const PORT = process.env.PORT || 5000;
-
-app.use((req, resp, next) => {
+var PORT = process.env.PORT || 5000;
+app.use(function (req, resp, next) {
     console.log("Test!", req.url, req.protocol);
     next();
-})
-
-app.get('/:id&test', (req, resp) => {
+});
+app.get('/:id&test', function (req, resp) {
     console.log(req.params);
 });
-
-app.get('/', (req, resp) => {
+app.get('/', function (req, resp) {
     resp.json({
         name: "ABC",
         id: 1,
@@ -22,12 +20,11 @@ app.get('/', (req, resp) => {
             type: 'LITE',
             cost: 1000
         }
-    })
+    });
 });
- 
- app.post('/hello', function(req, res){
+app.post('/hello', function (req, res) {
     res.send("You just called the post method at '/hello'!\n");
- });
-
-app.listen(PORT, () => 
-    console.log(`Running on port ${PORT}`));
+});
+app.listen(PORT, function () {
+    return console.log("Running on port " + PORT);
+});
