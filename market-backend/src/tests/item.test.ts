@@ -2,11 +2,14 @@ import { createItem } from '../item/item-factory';
 
 test('should create a normal item', () => {
     expect(createItem({
-        cost: 3,
-        quantityLeft: 10,
-        name: "Test Item",
-        description: "Some Realllly long description."
-    }, 'normal')).toEqual({
+        data: {
+            cost: 3,
+            quantityLeft: 10,
+            name: "Test Item",
+            description: "Some Realllly long description."
+        },
+        type: "normal"
+    })).toEqual({
         cost: 3,
         quantityLeft: 10,
         name: "Test Item",
@@ -16,16 +19,23 @@ test('should create a normal item', () => {
 
 test('should fail to create a normal item (Due to incomplete data)', () => {
     expect(() => createItem({
-        cost: 3,
-        description: "Some Realllly long description."
-    }, 'normal')).toThrowError();
+        data: {
+            cost: 3,
+            quantityLeft: 10,
+            description: "Some Realllly long description."
+        },
+        type: "normal"
+    })).toThrowError();
 });
 
 test('should fail to create a normal item (Due to unknown type)', () => {
     expect(() => createItem({
-        cost: 3,
-        quantityLeft: 10,
-        name: "Test Item",
-        description: "Some Realllly long description."
-    }, 'unknown')).toThrowError();
+        data: {
+            cost: 3,
+            quantityLeft: 10,
+            name: "Test Item",
+            description: "Some Realllly long description."
+        },
+        type: "unknown"
+    })).toThrowError();
 });

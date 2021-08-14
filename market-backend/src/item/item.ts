@@ -5,3 +5,7 @@ export default interface Item {
     name: string,
     description: string
 }
+
+export interface ItemB extends Item {
+    dd: string
+}
