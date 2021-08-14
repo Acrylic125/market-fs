@@ -6,12 +6,26 @@ You can boot up the application by running the .bat files or running the command
 
 ## Modules
 
-### market-backend
+<b>market-backend</b>
 
-    - The market backend uses the following node modules:
-        - Express
-    - The backend uses express to serve as an API communicator with the PostgresDB. The api is extended under /api
+<ul>
+    <li>
+        The market backend uses the following node modules:
+        <ul>
+            <li>Postgres (DB)</li>
+            <li>Express (API)</li>
+            <li>Jest (Testing)</li>
+        </ul>
+    </li>
+    <li>
+        The backend uses express to serve as an API communicator with the PostgresDB. The api is extended under /api
+    </li>
+</ul>
 
-### market-react-app
+<b>market-react-app</b>
 
-    - The market frontend uses react to construct the frontend UI.
+<ul>
+    <li>
+        The front end is built with react.
+    </li>
+</ul>
