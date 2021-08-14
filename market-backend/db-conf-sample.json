@@ -1,0 +1,6 @@
+{
+    "db-name": "market-app",
+    "db-username": "root",
+    "db-password": "your_password",
+    "port": 5432
+}
