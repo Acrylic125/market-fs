@@ -1,34 +1,61 @@
-import { Pool, PoolConfig } from 'pg';
-import fs from 'fs';
-import { prependPathWithRoot } from '../env';
-import chalk from 'chalk';
+import { Pool } from 'pg';
+import logger from '../utils/logger';
+import createPool from './db-loader';
 
-const KEY_DB_NAME = "db-name";
-const KEY_DB_USERNAME = "db-username";
-const KEY_DB_PASSWORD = "db-password";
-const KEY_DB_HOST = "db-host";
-const KEY_DB_PORT = "db-port";
+export type PoolTaskCallerType = 'ready' | 'default';
 
-// Load this synchronously for startup purposes.
-function loadInDBConfig(): PoolConfig {
-    const configRaw = fs.readFileSync(prependPathWithRoot('db-conf.json'));
-    const config = JSON.parse(configRaw.toString());
-    return {
-        user: config[KEY_DB_USERNAME],
-        password: config[KEY_DB_PASSWORD],
-        host: config[KEY_DB_HOST],
-        port: config[KEY_DB_PORT],
-        database: config[KEY_DB_NAME]
-    };
+export interface PoolTask {
+    (pool: Pool, callerType: PoolTaskCallerType): void;
 }
 
-const pool = new Pool(loadInDBConfig());
-console.log(`${chalk.blueBright("LOADING")} Postgres Database...`);
-try {
-    pool.connect();
-    console.log(`${chalk.greenBright("DONE")} Postgres Loaded!`);
-} catch (error) {
-    console.error(error);
-    console.log(`${chalk.redBright("FAILED")} Postgres Failed to load!`);
+// These are the tasks that will run right when the 
+// pool is ready.
+var onReadyScheduledTasks = new Array<PoolTask>();
+var pool: Pool | undefined = undefined;
+
+export async function runReadyScheduledTasks() {
+    if (!pool)
+        logger.error("The pool is not ready to run the onReadyScheduled tasks.")
+    else {
+        onReadyScheduledTasks.forEach(async task => 
+            await executePoolTask(task, 'ready'));
+        onReadyScheduledTasks = [];
+    }
 }
-export default pool;
+
+// Try not to use this as there is no guarantee this schedule runs 
+// before when the pool is ready.
+export function scheduleOnReadyPoolTask(task: PoolTask) {
+    onReadyScheduledTasks.push(task);
+}
+
+async function executePoolTask(poolTask: PoolTask, callerType: PoolTaskCallerType = 'default') {
+    poolTask((pool as Pool), callerType);
+}
+
+/** 
+ * Run this instead of accessing the pool object 
+ * directly as this guarantees the task runs without
+ * any race conditions.
+ *
+ * This also forces the task to run asynchronously. 
+ */
+export function schedulePoolTask(task: PoolTask) {
+    if (isPoolReady()) {
+        executePoolTask(task);
+    } else {
+        scheduleOnReadyPoolTask(task);
+    }
+}
+
+export function isPoolReady(): boolean {
+    return (pool) ? true : false;
+}
+
+createPool().then(async (createdPool) => {
+    pool = createdPool;
+    const tasks = onReadyScheduledTasks.length;
+    logger.load(`Loading on ready scheduled tasks (DB). Loading a total of ${tasks} tasks.`);
+    await runReadyScheduledTasks();
+    logger.success(`Loaded all scheduled tasks ${tasks}.`);
+});
