@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var pg_1 = require("pg");
 var fs_1 = __importDefault(require("fs"));
 var env_1 = require("../env");
+var chalk_1 = __importDefault(require("chalk"));
 var KEY_DB_NAME = "db-name";
 var KEY_DB_USERNAME = "db-username";
 var KEY_DB_PASSWORD = "db-password";
@@ -24,4 +25,13 @@ function loadInDBConfig() {
     };
 }
 var pool = new pg_1.Pool(loadInDBConfig());
+console.log(chalk_1.default.blueBright("LOADING") + " Postgres Database...");
+try {
+    pool.connect();
+    console.log(chalk_1.default.greenBright("DONE") + " Postgres Loaded!");
+}
+catch (error) {
+    console.error(error);
+    console.log(chalk_1.default.redBright("FAILED") + " Postgres Failed to load!");
+}
 exports.default = pool;

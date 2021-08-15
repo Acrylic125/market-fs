@@ -2,9 +2,11 @@ import pool from './db/postgres';
 import express from "express";
 var app = express();
 
-pool.once('connection', () => {
-    console.log("Test");
-})
+pool.query("CREATE TABLE accounts (id SERIAL PRIMARY KEY, username VARCHAR(255), email VARCHAR(255))",
+    (err, resp) => {
+        
+    });
+
 // pool.query("CREATE DATABASE marketdb;", (err, resp) => {
     
 // });

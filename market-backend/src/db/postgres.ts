@@ -1,6 +1,7 @@
 import { Pool, PoolConfig } from 'pg';
 import fs from 'fs';
 import { prependPathWithRoot } from '../env';
+import chalk from 'chalk';
 
 const KEY_DB_NAME = "db-name";
 const KEY_DB_USERNAME = "db-username";
@@ -22,4 +23,12 @@ function loadInDBConfig(): PoolConfig {
 }
 
 const pool = new Pool(loadInDBConfig());
+console.log(`${chalk.blueBright("LOADING")} Postgres Database...`);
+try {
+    pool.connect();
+    console.log(`${chalk.greenBright("DONE")} Postgres Loaded!`);
+} catch (error) {
+    console.error(error);
+    console.log(`${chalk.redBright("FAILED")} Postgres Failed to load!`);
+}
 export default pool;

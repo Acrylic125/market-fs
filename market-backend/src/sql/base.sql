@@ -1,6 +1,0 @@
-CREATE DATABASE marketdb;
-
-CREATE TABLE user(
-    id SERIAL PRIMARY KEY
-
-)

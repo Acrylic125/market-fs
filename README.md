@@ -12,9 +12,11 @@ You can boot up the application by running the .bat files or running the command
     <li>
         The market backend uses the following node modules:
         <ul>
-            <li>Postgres (DB)</li>
+            <li>Pg (Postgres)</li>
             <li>Express (API)</li>
             <li>Jest (Testing)</li>
+            <li>chalk (Debugging)</li>
+            <li>bCrypt (For User Passwords)</li>
         </ul>
     </li>
     <li>

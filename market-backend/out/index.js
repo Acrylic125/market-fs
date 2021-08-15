@@ -6,8 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var postgres_1 = __importDefault(require("./db/postgres"));
 var express_1 = __importDefault(require("express"));
 var app = express_1.default();
-postgres_1.default.once('connection', function () {
-    console.log("Test");
+postgres_1.default.query("CREATE TABLE accounts (id SERIAL PRIMARY KEY, username VARCHAR(255), email VARCHAR(255))", function (err, resp) {
 });
 // pool.query("CREATE DATABASE marketdb;", (err, resp) => {
 // });
