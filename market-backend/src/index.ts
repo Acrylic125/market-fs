@@ -4,7 +4,7 @@ var app = express();
 
 pool.query("CREATE TABLE accounts (id SERIAL PRIMARY KEY, username VARCHAR(255), email VARCHAR(255))",
     (err, resp) => {
-        //EE
+        //EEE
     });
 
 // pool.query("CREATE DATABASE marketdb;", (err, resp) => {

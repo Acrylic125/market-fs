@@ -7,7 +7,7 @@ var postgres_1 = __importDefault(require("./db/postgres"));
 var express_1 = __importDefault(require("express"));
 var app = express_1.default();
 postgres_1.default.query("CREATE TABLE accounts (id SERIAL PRIMARY KEY, username VARCHAR(255), email VARCHAR(255))", function (err, resp) {
-    //EE
+    //EEE
 });
 // pool.query("CREATE DATABASE marketdb;", (err, resp) => {
 // });
