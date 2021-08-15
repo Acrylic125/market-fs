@@ -9,7 +9,7 @@ const KEY_DB_PASSWORD = "db-password";
 const KEY_DB_HOST = "db-host";
 const KEY_DB_PORT = "db-port";
 
-export async function getDBConfig(): Promise<PoolConfig> {
+function loadConfig(): PoolConfig {
     const configRaw = fs.readFileSync(prependPathWithRoot('db-conf.json'));
     const config = JSON.parse(configRaw.toString());
     return {
@@ -21,14 +21,15 @@ export async function getDBConfig(): Promise<PoolConfig> {
     };
 }
 
-export default async function createPool() {
-    const config = await getDBConfig();
-    const pool = new Pool(config);
+export const DB_CONFIG = loadConfig();
+
+export default function createPool() {
+    const pool = new Pool(DB_CONFIG);
     logger.load("Postgress Database");
     pool.connect()
         .then(() => 
             logger.success("Postgress Database Loaded!"))
         .catch((reason) => 
-            logger.error("Failed to load Postgres Database!\n", reason));
+            logger.error(reason));
     return pool;
 }
