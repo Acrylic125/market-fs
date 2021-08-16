@@ -49,3 +49,19 @@ module logger {
 }
 
 export default logger;
+
+export interface LoggableOptions {
+    logErrors: boolean,
+    logWarns: boolean,
+    logLoad: boolean,
+    logSuccess: boolean,
+    logChecks: boolean
+}
+
+export const DEFAULT_LOGGABLE_OPTIONS: LoggableOptions = {
+    logErrors: true,
+    logWarns: true,
+    logLoad: true,
+    logSuccess: true,
+    logChecks: true
+};

@@ -1,5 +1,6 @@
 // This file acts as a global namespace for the environment.
 
+import chalk from 'chalk';
 import { dirname, sep } from 'path';
 
 function getRoot() {
@@ -12,4 +13,8 @@ export const root = getRoot();
 
 export function prependPathWithRoot(path: string) {
     return root + sep + path;
+}
+
+export module LogPrefix {
+    
 }
