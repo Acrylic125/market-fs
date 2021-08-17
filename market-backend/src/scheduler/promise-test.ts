@@ -1,42 +1,53 @@
 import AsyncSafeLoadScheduler from "./async-safeload-scheduler";
-
+import createPool from '../db/db-loader';
+import { Pool } from "pg";
 
 setTimeout(() => 
-    console.log("DDD"), 100);
-const scheduler = new AsyncSafeLoadScheduler<string>(
+    console.log("L100"), 100);
+
+const scheduler = new AsyncSafeLoadScheduler<Pool>(
     "Test",
-    new Promise<string>((resolve, err) => {
-        resolve("AAAA");
-    })
+    () => {
+        console.log("GG");
+        var pool = createPool();
+        return pool;
+    }
 );
-setTimeout(() => 
-    setTimeout(() => console.log("CAAAAAAAAAAA")), 100);
-console.log("De");
 
-scheduler.scheduleTask((val, source) => {
-    console.log("Test 1 " + val + " " + source.source);
-});
+scheduler.load();
+scheduler.load();
 
-scheduler.scheduleTask((val, source) => {
-    console.log("Test 2 " + val + " " + source.source);
-});
 
-scheduler.scheduleTask((val, source) => {
-    console.log("Test 3 " + val + " " + source.source);
-});
+console.log("Runner !!!!");
 
-scheduler.scheduleTask((val, source) => {
-    console.log("Test 4 " + val + " " + source.source);
-});
+// setTimeout(() => 
+//     setTimeout(() => console.log("CAAAAAAAAAAA")), 100);
+// console.log("De");
 
-setTimeout(() => {
-    scheduler.scheduleTask((val, source) => {
-        console.log("Test 5 " + val + " " + source.source);
-    });
-}, 1);
+// scheduler.scheduleTask((val, source) => {
+//     console.log("Test 1 " + val + " " + source.source);
+// });
 
-async function g() {
-    scheduler.load();    
-}
-g();
-console.log("Hello world!");
+// scheduler.scheduleTask((val, source) => {
+//     console.log("Test 2 " + val + " " + source.source);
+// });
+
+// scheduler.scheduleTask((val, source) => {
+//     console.log("Test 3 " + val + " " + source.source);
+// });
+
+// scheduler.scheduleTask((val, source) => {
+//     console.log("Test 4 " + val + " " + source.source);
+// });
+
+// setTimeout(() => {
+//     scheduler.scheduleTask((val, source) => {
+//         console.log("Test 5 " + val + " " + source.source);
+//     });
+// }, 1);
+
+// async function g() {
+//     scheduler.load();    
+// }
+// g();
+// console.log("Hello world!");

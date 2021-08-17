@@ -19,19 +19,19 @@ export default class AsyncSafeLoadScheduler<T> {
 
     constructor(
         public id: string,
-        private loaderPromise: Promise<T>,
+        private loaderSupplier: Supplier<T>,
         private loggableOptions: LoggableOptions = DEFAULT_LOGGABLE_OPTIONS
     ) {}
 
     private async loadResolvers() {
-        assert((this.loadedValue) ? true : false, "The loaded value has not been successfully loaded in!");
+        assert(this.hasSuccessfullyLoaded(), `'${this.id}' Safe Async Loader loaded value has not been successfully loaded in! (Load Resolvers)`);
         this.onLoadedResolvers.forEach((resolve) => 
             resolve((this.loadedValue as T)));
         this.onLoadedResolvers = []; // Clear resolvers after loaded.
     }
     
     private async scheduleTaskOnLoadedValue(task: AsyncSchedulerTask<T>) {
-        assert(this.hasSuccessfullyLoaded(), "The loaded value has not been successfully loaded in!");
+        assert(this.hasSuccessfullyLoaded(), `'${this.id}' Safe Async Loader loaded value has not been successfully loaded in! (Default Task)`);
         task((this.loadedValue as T), PRC_DEFAULT);
     }
 
@@ -55,6 +55,11 @@ export default class AsyncSafeLoadScheduler<T> {
         this.setState(0);
     }
 
+    private async loadLoaderSupplier() {
+        var supplied = this.loaderSupplier();
+        return supplied;
+    }
+
     public async load() {
         var { id, loggableOptions } = this;
         if ((this.state & SL_STARTED_LOADING) === SL_STARTED_LOADING) {
@@ -64,11 +69,11 @@ export default class AsyncSafeLoadScheduler<T> {
             this.state |= SL_STARTED_LOADING;
             if (loggableOptions.logLoad)
                 logger.load(`Loading '${id}' Async Safe Loader.`);
-            this.loaderPromise
+            await this.loadLoaderSupplier()
                 .then((val) => {
                     this.loadedValue = val;
-                    this.loadResolvers();
                     this.state |= SL_SUCCESSFUL_LOADING;
+                    this.loadResolvers();
                     if (loggableOptions.logSuccess)
                         logger.success(`'${id}' Async Safe Loader successfully loaded!`);
                 })

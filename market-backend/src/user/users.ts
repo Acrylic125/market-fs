@@ -1,5 +1,6 @@
 import { DB_CONFIG } from '../db/db-loader';
 import pool from '../db/postgres';
+import AsyncSafeLoadScheduler from '../scheduler/async-safeload-scheduler';
 import logger from '../utils/logger';
 import User from './user';
 
@@ -49,4 +50,7 @@ async function loadTable() {
         logger.success(`${USERS_TABLE_NAME} Table already exists in ${DB_CONFIG.database}!`);
     }
 }
-loadTable();
+
+const userScheduler = new AsyncSafeLoadScheduler<void>("users", () => 
+    loadTable());
+userScheduler.load();
