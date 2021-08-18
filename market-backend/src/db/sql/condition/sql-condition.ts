@@ -1,5 +1,5 @@
 import { SQLStringify } from "../sql-command";
-import { SQLConditionGlobalModifier, SQLConditionLinkOperator } from "./sql-condition-keywords";
+import { SQLConditionGlobalModifier, SQLConditionLinkOperator, SQLConditionLinkOperatorWrapper } from "./sql-condition-keywords";
 
 export type SQLConditionType = SQLCondition | SQLConditionGroup;
 
@@ -35,8 +35,13 @@ export class SQLConditionGroup implements SQLStringify {
         this.statement = condition.toSQLString();
     }
 
-    public append(operand: SQLConditionLinkOperator, condition: SQLConditionType): SQLConditionGroup {
+    public append(operand: SQLConditionLinkOperatorWrapper, condition: SQLConditionType): SQLConditionGroup {
         this.statement += (` ${operand} ${condition.toSQLString()}`);
+        return this;
+    }
+
+    public appendAll(operand: SQLConditionLinkOperatorWrapper, conditions: SQLConditionType[]) {
+        conditions.forEach((condition) => this.append(operand, condition));
         return this;
     }
 
@@ -46,6 +51,30 @@ export class SQLConditionGroup implements SQLStringify {
 
     public and(condition: SQLConditionType) {
         return this.append('AND', condition);
+    }
+
+    public nor(condition: SQLConditionType) {
+        return this.append('OR NOT', condition);
+    }
+
+    public nand(condition: SQLConditionType) {
+        return this.append('AND NOT', condition);
+    }
+
+    public orAll(...conditions: SQLConditionType[]) {
+        return this.appendAll('OR', conditions)
+    }
+
+    public andAll(...conditions: SQLConditionType[]) {
+        return this.appendAll('AND', conditions)
+    }
+
+    public norAll(...conditions: SQLConditionType[]) {
+        return this.appendAll('OR NOT', conditions)
+    }
+
+    public nandAll(...conditions: SQLConditionType[]) {
+        return this.appendAll('AND NOT', conditions)
     }
 
     public toSQLString() {
