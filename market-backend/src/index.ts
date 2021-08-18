@@ -2,18 +2,18 @@ import pool from './db/db-loader';
 import express from "express";
 var app = express();
 
-pool.query(
-    `
-    CREATE TABLE accounts (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(), 
-        username VARCHAR(64), 
-        email VARCHAR(128), 
-        password VARCHAR(255)
-    )
-    `,
-    (err, resp) => {
-        //EEE
-    });
+// pool.query(
+//     `
+//     CREATE TABLE accounts (
+//         id UUID PRIMARY KEY DEFAULT gen_random_uuid(), 
+//         username VARCHAR(64), 
+//         email VARCHAR(128), 
+//         password VARCHAR(255)
+//     )
+//     `,
+//     (err, resp) => {
+//         //EEE
+//     });
 
 // pool.query("CREATE DATABASE marketdb;", (err, resp) => {
     
