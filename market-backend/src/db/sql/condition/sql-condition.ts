@@ -1,3 +1,4 @@
+import { raw } from "express";
 import { SQLStringify } from "../sql-command";
 import { SQLConditionGlobalModifier, SQLConditionLinkOperator, SQLConditionLinkOperatorWrapper } from "./sql-condition-keywords";
 
@@ -12,19 +13,24 @@ export const NOT_CONDITION_OPTION: SQLConditionOptions = {
     modifiers: NOT_MODIFIER
 };
 
-export class SQLCondition implements SQLStringify {
-    constructor(public rawStatement: string, 
-                public conditionOptions?: SQLConditionOptions) {}
+export interface SQLCondition extends SQLStringify {
+    rawStatement: string,
+    conditionOptions?: SQLConditionOptions
+}
 
-    public toSQLString() {
-        const { conditionOptions } = this;
-        var composedStatement = this.rawStatement;
-        if (conditionOptions) {
-            const { modifiers } = conditionOptions;
-            modifiers.forEach((modifier) => 
-                composedStatement = `${modifier} ${composedStatement}`);
+export function newConditionWthRawStatement(rawStatement: string, conditionOptions?: SQLConditionOptions): SQLCondition {
+    return {
+        rawStatement: rawStatement,
+        conditionOptions: conditionOptions,
+        toSQLString: () => {
+            var composedStatement = rawStatement;
+            if (conditionOptions) {
+                const { modifiers } = conditionOptions;
+                modifiers.forEach((modifier) => 
+                    composedStatement = `${modifier} ${composedStatement}`);
+            }
+            return composedStatement;
         }
-        return composedStatement;
     }
 }
 

@@ -1,4 +1,4 @@
-import { SQLCondition, 
+import { newConditionWthRawStatement, SQLCondition, 
          SQLConditionGroup,
          SQLConditionOptions, 
          SQLConditionType, 
@@ -12,7 +12,7 @@ function formatToSafeSQLValue(formatFor: any) {
 }
 
 export function singleComparator<T>(key: string, comparator: SQLSingleComparator, val: T, options?: SQLConditionOptions) {
-    return new SQLCondition(`${key} ${comparator} ${formatToSafeSQLValue(val)}`, options);
+    return newConditionWthRawStatement(`${key} ${comparator} ${formatToSafeSQLValue(val)}`, options);
 }
 
 export function ifEqualTo<T>(key: string, equalTo: T, options?: SQLConditionOptions) {
@@ -48,7 +48,7 @@ export function ifSmallerThanOrEqualTo<T>(key: string, smallerThanOrEqualTo: T, 
 }
 
 export function ifBetween<T>(key: string, betweenLower: T, betweenUpper: T, options?: SQLConditionOptions) {
-    return new SQLCondition(`${key} BETWEEN ${formatToSafeSQLValue(betweenLower)} AND ${formatToSafeSQLValue(betweenUpper)}`, options);
+    return newConditionWthRawStatement(`${key} BETWEEN ${formatToSafeSQLValue(betweenLower)} AND ${formatToSafeSQLValue(betweenUpper)}`, options);
 }
 
 export function groupCondition(startingCondition: SQLConditionType) {
