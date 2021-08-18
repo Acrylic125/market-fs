@@ -1,4 +1,5 @@
-import { groupCondition, ifEqualTo, ifGreaterThan, NOT_CONDITION_OPTION, NOT_MODIFIER, SQLConditionGroup } from "../db/sql/sql-conditions";
+import {NOT_CONDITION_OPTION, NOT_MODIFIER, SQLConditionGroup } from "../db/sql/condition/sql-condition";
+import { groupCondition, ifEqualTo, ifGreaterThan } from "../db/sql/condition/sql-condition-functions";
 
 test(`should SQL condition equal to '(NOT balance > 420 AND username = 'postgres' OR (username = 'alternate' AND (accessto = true OR city = 'New York')))'`, () => {
     expect(
