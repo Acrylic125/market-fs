@@ -1,4 +1,4 @@
-import createPool from './db-loader';
+import { createSequelize } from './db-loader';
 
-const pool = createPool();
-export default pool;
+const sequelize = createSequelize();
+export default sequelize;

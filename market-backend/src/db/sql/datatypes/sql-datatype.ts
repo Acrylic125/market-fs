@@ -58,3 +58,17 @@ export const SQL_TINYTEXT = newSQLTinyTextType();
 export const SQL_TEXT = newSQLTextType();
 export const SQL_MEDIUMTEXT = newSQLMediumTextType();
 export const SQL_LONGTEXT = newSQLLongTextType();
+
+export class SQL_Enum implements SQLDataType {
+    public readonly typeName: string = "";
+
+    constructor(public size: number) {}
+
+    public isObjectInstanceOf(obj: any): boolean {
+        return (typeof(obj) === 'string') && obj.length <= this.size;
+    }
+
+    public formatObjectToSQLString(obj: any): string {
+        return obj;
+    }
+}
