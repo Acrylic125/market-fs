@@ -21,5 +21,15 @@ export const UsersTable = sequelize.define("users", {
         type: STRING,
         defaultValue: "",
         allowNull: false
+    },
+    firstName: {
+        type: STRING,
+        defaultValue: "first_name",
+        allowNull: false
+    },
+    lastName: {
+        type: STRING,
+        defaultValue: "last_name",
+        allowNull: false
     }
 });
