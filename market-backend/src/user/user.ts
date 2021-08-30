@@ -1,7 +1,20 @@
-export default interface User {
-    username: string,
-    id: string,
-    email: string,
-    firstName: string,
-    lastName: string
+import {
+    Entity, PrimaryGeneratedColumn, Column
+} from "typeorm";
+
+@Entity()
+export class User {
+       
+    @PrimaryGeneratedColumn("uuid")
+    id: string;
+    
+    @Column()
+    firstName: string;
+    
+    @Column()
+    lastName: string;
+    
+    @Column()
+    password: string
+
 }
