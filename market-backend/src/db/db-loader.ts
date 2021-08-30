@@ -1,8 +1,6 @@
-import { Pool, PoolConfig } from 'pg';
 import fs from 'fs';
+import { createConnection } from 'typeorm';
 import { prependPathWithRoot } from '../env';
-import logger from '../utils/logger';
-import { Dialect, Options, Sequelize } from 'sequelize';
 
 const KEY_DB_TYPE = "db-type";
 const KEY_DB_NAME = "db-name";
@@ -11,25 +9,9 @@ const KEY_DB_PASSWORD = "db-password";
 const KEY_DB_HOST = "db-host";
 const KEY_DB_PORT = "db-port";
 
-function adaptToSequelizeOptions(config: DBConfig): Options {
-    return {
-        ...config,
-        dialect: (config.type as Dialect)
-    };
-}
-
 const DB_CONF = 'db-conf.json';
 
-export interface DBConfig {
-    type: string,
-    username: string,
-    password: string,
-    host: string,
-    port: number,
-    database: string
-}
-
-function parseConfig(): DBConfig {
+function parseConfig() {
     const configRaw = fs.readFileSync(prependPathWithRoot(DB_CONF));
     const config = JSON.parse(configRaw.toString());
     return {
@@ -44,9 +26,8 @@ function parseConfig(): DBConfig {
 
 export const DB_CONFIG = parseConfig();
 
-export function createSequelize() {
-    return new Sequelize(adaptToSequelizeOptions(DB_CONFIG));
-}
+const connection = await createConnection(DB_CONFIG);
+export default connection;
 
 // export default function createPool() {
 //     const pool = new Pool(DB_CONFIG);
