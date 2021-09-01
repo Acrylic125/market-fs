@@ -1,6 +1,7 @@
 import fs from 'fs';
-import { createConnection } from 'typeorm';
+import { Connection, createConnection } from 'typeorm';
 import { prependPathWithRoot } from '../env';
+import AsyncSafeLoadScheduler from '../scheduler/async-safeload-scheduler';
 
 const KEY_DB_TYPE = "db-type";
 const KEY_DB_NAME = "db-name";
@@ -26,8 +27,11 @@ function parseConfig() {
 
 export const DB_CONFIG = parseConfig();
 
-const connection = await createConnection(DB_CONFIG);
-export default connection;
+const dbs = new AsyncSafeLoadScheduler<Connection>(
+    "TypeORM connection",
+    createConnection(DB_CONFIG)
+);
+export default dbs;
 
 // export default function createPool() {
 //     const pool = new Pool(DB_CONFIG);

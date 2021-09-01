@@ -5,17 +5,17 @@ import { Pool } from "pg";
 setTimeout(() => 
     console.log("L100"), 100);
 
-const scheduler = new AsyncSafeLoadScheduler<Pool>(
-    "Test",
-    () => {
-        console.log("GG");
-        var pool = createPool();
-        return pool;
-    }
-);
+// const scheduler = new AsyncSafeLoadScheduler<Pool>(
+//     "Test",
+//     () => {
+//         console.log("GG");
+//         var pool = createPool();
+//         return pool;
+//     }
+// );
 
-scheduler.load();
-scheduler.load();
+// scheduler.load();
+// scheduler.load();
 
 
 console.log("Runner !!!!");
