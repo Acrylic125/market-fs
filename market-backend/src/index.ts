@@ -1,4 +1,4 @@
-import pool from './db/db-loader';
+import pool from './db/db';
 import express from "express";
 var app = express();
 

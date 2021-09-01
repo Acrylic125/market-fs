@@ -1,7 +1,6 @@
 // This file acts as a global namespace for the environment.
 
 import "reflect-metadata";
-import chalk from 'chalk';
 import { dirname, sep } from 'path';
 
 function getRoot() {

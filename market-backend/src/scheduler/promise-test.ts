@@ -1,5 +1,5 @@
 import AsyncSafeLoadScheduler from "./async-safeload-scheduler";
-import createPool from '../db/db-loader';
+import createPool from '../db/db';
 import { Pool } from "pg";
 
 setTimeout(() => 
