@@ -21,7 +21,8 @@ function parseConfig() {
         password: config[KEY_DB_PASSWORD],
         host: config[KEY_DB_HOST],
         database: config[KEY_DB_NAME],
-        port: config[KEY_DB_PORT]
+        port: config[KEY_DB_PORT],
+        entities: [ __dirname + './../user/user.js',  __dirname + './../entity/*.js'  ]
     };
 }
 

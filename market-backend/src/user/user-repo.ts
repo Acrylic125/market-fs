@@ -14,5 +14,5 @@ async function loadRepo() {
         connection.getCustomRepository(UserRepository));
 }
 
-const userRepository = dbs.scheduleTask(() => loadRepo());
+const userRepository = dbs.scheduleTask(loadRepo);
 

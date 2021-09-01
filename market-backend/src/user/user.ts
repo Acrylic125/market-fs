@@ -5,8 +5,8 @@ import {
 @Entity()
 export class User {
        
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+    @PrimaryGeneratedColumn()
+    id: number;
     
     @Column()
     firstName: string;
