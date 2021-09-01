@@ -1,7 +1,7 @@
 import { genSalt, hash, compare } from 'bcrypt';
 
 export async function hashPassword(password: string) {
-    const salt = await genSalt(15);
+    const salt = await genSalt(9);
     return hash(password, salt);
 }
 

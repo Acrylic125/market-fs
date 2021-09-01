@@ -7,16 +7,28 @@ import {
 })
 export class User {
        
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryGeneratedColumn("uuid")
+    id: string;
     
-    @Column()
+    @Column({
+        length: 32
+    })
+    username: string;
+
+    @Column({
+        length: 32
+    })
     firstName: string;
     
-    @Column()
+    @Column({
+        length: 32
+    })
     lastName: string;
     
     @Column()
     password: string
+
+    @Column({ type: 'timestamptz' })
+    createdOn: Date;
 
 }

@@ -1,6 +1,7 @@
 import { EntityRepository, Repository } from "typeorm";
 import dbs from "../db/db";
 import AsyncSafeLoadScheduler from "../scheduler/async-safeload-scheduler";
+import { hashPassword } from "./password";
 import { User } from "./user";
 
 @EntityRepository(User)
@@ -15,14 +16,16 @@ const userRepository = new AsyncSafeLoadScheduler<UserRepository>("User Reposito
         dbs.scheduleTask((connection) => 
             resolve(connection.getCustomRepository(UserRepository)))
 ));
-userRepository.load();
 
-userRepository.scheduleTask((repo) => {
-    const user = new User();
-    user.firstName = "Tom";
-    user.lastName = "Adams";
-    user.password = "abc";
-    console.log("Saving...");
-    repo.save(user);
-    console.log("Saved!");
-})
+for (let index = 0; index < 100; index++) {
+    userRepository.scheduleTask(async (repo) => {
+        const user = new User();
+        user.username = "User-" + index;
+        user.firstName = "Tom";
+        user.lastName = "Adams";
+        user.password = await hashPassword("abc");
+        user.createdOn = new Date();
+        repo.save(user);
+    });
+}
+userRepository.load();
