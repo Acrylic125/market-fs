@@ -49,13 +49,6 @@ export default class AsyncSafeLoadScheduler<T> {
         }
     }
 
-    public async scheduleSupplier<V>(supplier: AsyncSchedulerSupplier<V, T>) {
-        var supplied: V | null = null;
-        await this.scheduleTaskOnLoadedValue((val, src) => 
-            supplied = supplier(val, src));
-        return supplied;
-    }
-
     private setState(state: number) {
         this.state = state;
     }
