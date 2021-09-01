@@ -1,10 +1,13 @@
 import { assert } from 'console';
 import { PromiseResolver, Supplier } from '../utils/functional';
 import logger, { DEFAULT_LOGGABLE_OPTIONS, LoggableOptions } from '../utils/logger';
-import { PRC_DEFAULT, PRC_READY, SchedulerTask, SchedulerTaskSource } from './scheduler-task';
+import { PRC_DEFAULT, PRC_READY, SchedulerSupplier, SchedulerTask, SchedulerTaskSource } from './scheduler-task';
 
 export interface AsyncSchedulerTask<T> 
     extends SchedulerTask<T, SchedulerTaskSource> {}
+
+export interface AsyncSchedulerSupplier<V, T> 
+    extends SchedulerSupplier<V, T, SchedulerTaskSource> {}
 
 // Safe Load states:
 const SL_STARTED_LOADING = 0x01;
@@ -19,7 +22,7 @@ export default class AsyncSafeLoadScheduler<T> {
 
     constructor(
         public id: string,
-        private loaderSupplier: Supplier<T>,
+        private promise: Promise<T>,
         private loggableOptions: LoggableOptions = DEFAULT_LOGGABLE_OPTIONS
     ) {}
 
@@ -46,6 +49,13 @@ export default class AsyncSafeLoadScheduler<T> {
         }
     }
 
+    public async scheduleSupplier<V>(supplier: AsyncSchedulerSupplier<V, T>) {
+        var supplied: V | null = null;
+        await this.scheduleTaskOnLoadedValue((val, src) => 
+            supplied = supplier(val, src));
+        return supplied;
+    }
+
     private setState(state: number) {
         this.state = state;
     }
@@ -53,11 +63,6 @@ export default class AsyncSafeLoadScheduler<T> {
     // Do not use this unless YOU REALLY HAVE TO!
     public resetState() {
         this.setState(0);
-    }
-
-    private async loadLoaderSupplier() {
-        var supplied = this.loaderSupplier();
-        return supplied;
     }
 
     public async load() {
@@ -69,7 +74,7 @@ export default class AsyncSafeLoadScheduler<T> {
             this.state |= SL_STARTED_LOADING;
             if (loggableOptions.logLoad)
                 logger.load(`Loading '${id}' Async Safe Loader.`);
-            await this.loadLoaderSupplier()
+            await this.promise
                 .then((val) => {
                     this.loadedValue = val;
                     this.state |= SL_SUCCESSFUL_LOADING;
