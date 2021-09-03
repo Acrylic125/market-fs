@@ -7,31 +7,6 @@ import { User } from "./user";
 @EntityRepository(User)
 class UserRepository extends Repository<User> {
 
-    findOneByID(id: string) {
-        return this.createQueryBuilder("user")
-            .where("user.id = :id", { id })
-            .getOne();
-    }
-
-    findByID(id: string) {
-        return this.createQueryBuilder("user")
-            .where("user.id = :id", { id })
-            .getMany();
-    }
-
-    findOneByUsername(username: string) {
-        return this.createQueryBuilder("user")
-            .where("user.firstName = :username", { username })
-            .getOne();
-    }
-
-    findByName(firstName: string, lastName: string) {
-        return this.createQueryBuilder("user")
-            .where("user.firstName = :firstName", { firstName })
-            .andWhere("user.lastName = :lastName", { lastName })
-            .getMany();
-    }
-
 }
 
 const userRepository = new AsyncSafeLoadScheduler<UserRepository>("User Repository", new Promise<UserRepository>(
@@ -40,9 +15,31 @@ const userRepository = new AsyncSafeLoadScheduler<UserRepository>("User Reposito
             resolve(connection.getCustomRepository(UserRepository)))
 ));
 
-async function createUser(user: User) {
+export async function createUser(user: User) {
     userRepository.scheduleTask(async (repo) => 
         repo.save(user));
+}
+
+export function findOneByID(id: string) {
+    var promise = new Promise<User | undefined>((resolve) => {
+        userRepository.scheduleTask((repo) => {
+            resolve(repo.createQueryBuilder("user")
+                        .where("user.id = :id", { id })
+                        .getOne());
+        });
+    });
+    return promise;
+}
+
+export function findOneByUsername(username: string) {
+    var promise = new Promise<User | undefined>((resolve) => {
+        userRepository.scheduleTask((repo) => {
+            resolve(repo.createQueryBuilder("user")
+                        .where("user.username = :username", { username })
+                        .getOne());
+        });
+    });
+    return promise;
 }
 
 userRepository.load();
