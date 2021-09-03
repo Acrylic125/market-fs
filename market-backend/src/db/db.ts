@@ -35,14 +35,3 @@ const dbs = new AsyncSafeLoadScheduler<Connection>(
 );
 dbs.load();
 export default dbs;
-
-// export default function createPool() {
-//     const pool = new Pool(DB_CONFIG);
-//     logger.load("Postgress Database");
-//     pool.connect()
-//         .then(() => 
-//             logger.success("Postgress Database Loaded!"))
-//         .catch((reason) => 
-//             logger.error(reason));
-//     return pool;
-// }

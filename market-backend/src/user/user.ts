@@ -26,7 +26,7 @@ export class User {
     lastName: string;
     
     @Column()
-    password: string
+    password: string // Hashed
 
     @Column({ type: 'timestamptz' })
     createdOn: Date;
