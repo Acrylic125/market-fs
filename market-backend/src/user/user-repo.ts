@@ -7,7 +7,30 @@ import { User } from "./user";
 @EntityRepository(User)
 class UserRepository extends Repository<User> {
 
+    findOneByID(id: string) {
+        return this.createQueryBuilder("user")
+            .where("user.id = :id", { id })
+            .getOne();
+    }
 
+    findByID(id: string) {
+        return this.createQueryBuilder("user")
+            .where("user.id = :id", { id })
+            .getMany();
+    }
+
+    findOneByUsername(username: string) {
+        return this.createQueryBuilder("user")
+            .where("user.firstName = :username", { username })
+            .getOne();
+    }
+
+    findByName(firstName: string, lastName: string) {
+        return this.createQueryBuilder("user")
+            .where("user.firstName = :firstName", { firstName })
+            .andWhere("user.lastName = :lastName", { lastName })
+            .getMany();
+    }
 
 }
 
