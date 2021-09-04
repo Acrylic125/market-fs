@@ -2,6 +2,12 @@ import {
     Entity, PrimaryGeneratedColumn, Column
 } from "typeorm";
 
+export class CannotParseDataAsUserError extends Error {
+    constructor(msg: string) {
+        super(msg);
+    }
+}
+
 @Entity({
     name: "users"
 })
@@ -11,8 +17,7 @@ export class User {
     id: string;
     
     @Column({
-        length: 32,
-        default: "no_username"
+        length: 32
     })
     username: string;
 
@@ -33,5 +38,21 @@ export class User {
 
     @Column({ type: 'timestamptz' })
     createdOn: Date;
+
+    static parseFromData(data: any) {
+        const { username, password, firstName, lastName, createdOn } = data;
+        if (username && password && firstName && lastName && createdOn) {
+            const user = new User();
+            user.username = username;
+            user.password = password;
+            user.firstName = firstName;
+            user.lastName = lastName;
+            user.createdOn = createdOn;
+            return user;
+        } else
+            throw new CannotParseDataAsUserError(
+                `Cannot parse with invalid data
+                ${JSON.stringify(data, null, 4)} `);
+    }
 
 }
