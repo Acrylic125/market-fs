@@ -12,6 +12,8 @@ const userRepository = new AsyncSafeLoadScheduler<UserRepository>("User Reposito
             resolve(connection.getCustomRepository(UserRepository)))
 ));
 
+export default userRepository;
+
 export async function createUser(user: User) {
     await userRepository.scheduleTask((repo) => 
         repo.save(user));
