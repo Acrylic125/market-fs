@@ -1,7 +1,7 @@
 import { EntityRepository, Repository } from "typeorm";
 import dbs from "../db/db";
 import AsyncSafeLoadScheduler from "../scheduler/async-safeload-scheduler";
-import { User } from "./user";
+import User from "./user";
 
 @EntityRepository(User)
 class UserRepository extends Repository<User> {}

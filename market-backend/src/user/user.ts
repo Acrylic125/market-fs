@@ -11,7 +11,7 @@ export class CannotParseDataAsUserError extends Error {
 @Entity({
     name: "users"
 })
-export class User {
+export default class User {
        
     @PrimaryGeneratedColumn("uuid")
     id: string;
@@ -41,17 +41,17 @@ export class User {
 
     static parseFromData(data: any) {
         const { username, password, firstName, lastName, createdOn } = data;
-        if (username && password && firstName && lastName && createdOn) {
+        if (username && password && firstName && lastName) {
             const user = new User();
             user.username = username;
             user.password = password;
             user.firstName = firstName;
             user.lastName = lastName;
-            user.createdOn = createdOn;
+            user.createdOn = (createdOn) ? createdOn : new Date();
             return user;
         } else
             throw new CannotParseDataAsUserError(
-                `Cannot parse with invalid data
+                `Cannot parse with invalid data\n
                 ${JSON.stringify(data, null, 4)} `);
     }
 

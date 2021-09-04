@@ -1,4 +1,5 @@
 import { Router } from "express";
+import User, { CannotParseDataAsUserError } from "../user/user";
 import userRepository from "../user/user-repo";
 
 const userRouter = Router();
@@ -10,10 +11,17 @@ userRouter.route('/:id')
     })
     .delete((request, response) => {
         response.send(`Delete ${request.params.id}`);
-    })
-    .post((request, response) => {
-        console.log(request.body);
-        response.send(`Post ${request.params.id} ${JSON.stringify(request.body, null, 4)}`);
     });
+
+userRouter.post("/new", (request, response, next) => {
+    try {
+        var user = User.parseFromData(request.body);
+        response.status(201).json(user);
+        next();
+    } catch (err) {
+        response.status(400);
+        next(err);
+    } 
+});
 
 export default userRouter;
