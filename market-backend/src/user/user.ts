@@ -40,9 +40,10 @@ export default class User {
     createdOn: Date;
 
     static parseFromData(data: any) {
-        const { username, password, firstName, lastName, createdOn } = data;
+        const { id, username, password, firstName, lastName, createdOn } = data;
         if (username && password && firstName && lastName) {
             const user = new User();
+            user.id = id;
             user.username = username;
             user.password = password;
             user.firstName = firstName;
