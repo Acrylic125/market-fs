@@ -33,5 +33,6 @@ const dbs = new AsyncSafeLoadScheduler<Connection>(
     "TypeORM connection",
     createConnection(DB_CONFIG)
 );
+
 dbs.load();
 export default dbs;

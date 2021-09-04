@@ -13,7 +13,7 @@ const userRepository = new AsyncSafeLoadScheduler<UserRepository>("User Reposito
 ));
 
 export async function createUser(user: User) {
-    userRepository.scheduleTask(async (repo) => 
+    await userRepository.scheduleTask((repo) => 
         repo.save(user));
 }
 
@@ -41,13 +41,16 @@ export function findOneByUsername(username: string) {
 
 export function isUsernameTaken(username: string) {
     var promise = new Promise<boolean>((resolve) => {
-        userRepository.scheduleTask((repo) => {
-            resolve(repo.createQueryBuilder("user")
-                        .where("user.username = :username", { username })
-                        .getOne() !== undefined);
-        });
+        findOneByUsername(username).then(user => 
+            resolve(user !== undefined));
     });
     return promise;
 }
 
 userRepository.load();
+
+// var user = new User();
+// user.username = "Test_Username";
+// user.createdOn = new Date();
+// user.password = "abc";
+// createUser(user)
