@@ -1,13 +1,10 @@
 import { EntityRepository, Repository } from "typeorm";
 import dbs from "../db/db";
 import AsyncSafeLoadScheduler from "../scheduler/async-safeload-scheduler";
-import { hashPassword } from "./password";
 import { User } from "./user";
 
 @EntityRepository(User)
-class UserRepository extends Repository<User> {
-
-}
+class UserRepository extends Repository<User> {}
 
 const userRepository = new AsyncSafeLoadScheduler<UserRepository>("User Repository", new Promise<UserRepository>(
     (resolve) => 
@@ -37,6 +34,17 @@ export function findOneByUsername(username: string) {
             resolve(repo.createQueryBuilder("user")
                         .where("user.username = :username", { username })
                         .getOne());
+        });
+    });
+    return promise;
+}
+
+export function isUsernameTaken(username: string) {
+    var promise = new Promise<boolean>((resolve) => {
+        userRepository.scheduleTask((repo) => {
+            resolve(repo.createQueryBuilder("user")
+                        .where("user.username = :username", { username })
+                        .getOne() !== undefined);
         });
     });
     return promise;
