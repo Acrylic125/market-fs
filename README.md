@@ -17,7 +17,8 @@ You can boot up the application by running the .bat files or running the command
             <li>Jest (Testing)</li>
             <li>chalk (Debugging)</li>
             <li>bCrypt (For User Passwords)</li>
-            <li>Sequelize (Postgres)</li>
+            <li>TypeORM (Postgres)</li>
+            <li>Cookie Parser (Authentication)</li>
         </ul>
     </li>
     <li>
