@@ -7,6 +7,7 @@ const userRouter = Router();
 
 userRouter.route('/:id')
     .get((request, response) => {
+        
         response.send(`Get ${request.params.id}`);
     })
     .delete((request, response) => {
@@ -33,6 +34,10 @@ userRouter.post("/new", async (request, response, next) => {
         }
         next(err);
     } 
+});
+
+userRouter.post("/login/:id", (request, response) => {
+    
 });
 
 export default userRouter;
