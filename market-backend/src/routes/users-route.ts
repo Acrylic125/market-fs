@@ -1,7 +1,7 @@
 import { Router } from "express";
 import User, { CannotParseDataAsUserError } from "../user/user";
-import userRepository, { isUsernameTaken } from "../user/user-repo";
-import { resolveResponseError } from "./route-utils";
+import userRepository, { createUser, isUsernameTaken } from "../user/user-repo";
+import { jsonResponseError } from "./route-utils";
 
 const userRouter = Router();
 
@@ -19,18 +19,19 @@ userRouter.post("/new", async (request, response, next) => {
         var user = User.parseFromData(request.body);
         if (await isUsernameTaken(user.username)) {
             response.status(400)
-                .json(resolveResponseError("Username Taken"));
+                .json(jsonResponseError("Username Taken"));
         } else {
+            createUser(user);
             response.status(201).json(user);
         }
         next();
     } catch (err) {
         if (err instanceof CannotParseDataAsUserError) {
             response.status(400)
-                .json(resolveResponseError("Cannot parse data"));
+                .json(jsonResponseError("Cannot parse data"));
         } else {
             response.status(500)
-                .json(resolveResponseError("Unknown Error"));
+                .json(jsonResponseError("Unknown Error"));
         }
         next(err);
     } 

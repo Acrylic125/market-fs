@@ -1,5 +1,5 @@
 
-export function resolveResponseError(reason: string) {
+export function jsonResponseError(reason: string) {
     return {
         reason: reason
     };
