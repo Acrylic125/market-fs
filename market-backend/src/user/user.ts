@@ -32,6 +32,12 @@ export default class User {
         default: "no_last_name"
     })
     lastName: string;
+
+    @Column({
+        length: 32,
+        default: "nomail@nomail.com"
+    })
+    email: string;
     
     @Column()
     password: string // Hashed

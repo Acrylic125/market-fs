@@ -2,6 +2,7 @@ import { Router } from "express";
 import User, { CannotParseDataAsUserError } from "../user/user";
 import userRepository, { createUser, isUsernameTaken } from "../user/user-repo";
 import { jsonResponseError } from "./route-utils";
+import { verifyPassword } from '../user/password';
 
 const userRouter = Router();
 
@@ -37,8 +38,11 @@ userRouter.post("/new", async (request, response, next) => {
     } 
 });
 
-userRouter.post("/login/:id", (request, response) => {
-    
+userRouter.get("/login", (request, response) => {
+    var { signInAs, password } = request.body;
+    if ( verifyPassword()) {
+
+    }
 });
 
 export default userRouter;

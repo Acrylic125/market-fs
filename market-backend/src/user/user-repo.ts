@@ -41,9 +41,28 @@ export function findOneByUsername(username: string) {
     return promise;
 }
 
+export function findOneByEmail(email: string) {
+    var promise = new Promise<User | undefined>((resolve) => {
+        userRepository.scheduleTask((repo) => {
+            resolve(repo.createQueryBuilder("user")
+                        .where("user.email = :email", { email })
+                        .getOne());
+        });
+    });
+    return promise;
+}
+
 export function isUsernameTaken(username: string) {
     var promise = new Promise<boolean>((resolve) => {
         findOneByUsername(username).then(user => 
+            resolve(user !== undefined));
+    });
+    return promise;
+}
+
+export function isEmailTaken(email: string) {
+    var promise = new Promise<boolean>((resolve) => {
+        findOneByEmail(email).then(user => 
             resolve(user !== undefined));
     });
     return promise;
