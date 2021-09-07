@@ -40,8 +40,15 @@ userRouter.post("/new", async (request, response, next) => {
 
 userRouter.get("/login", (request, response) => {
     var { signInAs, password } = request.body;
-    if ( verifyPassword()) {
-
+    if (!(signInAs && password)) {
+        response.status(400)
+            .json(jsonResponseError("No username/email or password provided"));
+        return;
+    } 
+    if (!verifyPassword(password, )) {
+        response.status(400)
+            .json(jsonResponseError("No username or email provided"));
+        return;
     }
 });
 
