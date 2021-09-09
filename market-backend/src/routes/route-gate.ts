@@ -10,7 +10,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(session({
     secret: "TempSecret",
     cookie: {
-        secure: (process.env.NODE_ENV) ? true : false
+        secure: false, // Temp
+        signed: true,
+        sameSite: 'strict'
     }
 }));
 app.use(cookieParser())
