@@ -1,6 +1,6 @@
 import { Router } from "express";
 import User, { CannotParseDataAsUserError } from "../user/user";
-import userRepository, { createUser, isUsernameTaken } from "../user/user-repo";
+import userRepository, { createUser, findOneByEmail, findOneByUsername, isUsernameTaken } from "../user/user-repo";
 import { jsonResponseError } from "./route-utils";
 import { verifyPassword } from '../user/password';
 
@@ -17,7 +17,7 @@ userRouter.route('/:id')
 
 userRouter.post("/new", async (request, response, next) => {
     try {
-        var user = User.parseFromData(request.body);
+        var user = User.parseFromRequestData(request.body);
         if (await isUsernameTaken(user.username)) {
             response.status(400)
                 .json(jsonResponseError("Username Taken"));
@@ -38,18 +38,32 @@ userRouter.post("/new", async (request, response, next) => {
     } 
 });
 
-userRouter.get("/login", (request, response) => {
+const EMAIL_IDENTIFIER_REGEX = /@$/gi.compile();
+
+export async function resolveUserFromSignInAs(signInAs: string) {
+    return (EMAIL_IDENTIFIER_REGEX.test(signInAs)) ? findOneByEmail(signInAs) : findOneByUsername(signInAs);
+}
+
+userRouter.get("/login", async (request, response, next) => {
     var { signInAs, password } = request.body;
     if (!(signInAs && password)) {
         response.status(400)
             .json(jsonResponseError("No username/email or password provided"));
         return;
     } 
-    if (!verifyPassword(password, )) {
+    var user = await resolveUserFromSignInAs(signInAs);
+    if (!user) {
         response.status(400)
-            .json(jsonResponseError("No username or email provided"));
+            .json(jsonResponseError("Invalid account"));
+        return;
+    } 
+    if (!verifyPassword(password, user.password)) {
+        response.status(400)
+            .json(jsonResponseError("Invalid password"));
         return;
     }
+    response.status(200).json(user);
+    next();
 });
 
 export default userRouter;

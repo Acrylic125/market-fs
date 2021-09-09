@@ -1,6 +1,7 @@
 import {
     Entity, PrimaryGeneratedColumn, Column
 } from "typeorm";
+import { hashPassword } from "./password";
 
 export class CannotParseDataAsUserError extends Error {
     constructor(msg: string) {
@@ -44,6 +45,11 @@ export default class User {
 
     @Column({ type: 'timestamptz' })
     createdOn: Date;
+
+    static parseFromRequestData(data: any) {
+        data.password = (data.password) ? hashPassword(data.password) : undefined;
+        return User.parseFromData(data); 
+    }
 
     static parseFromData(data: any) {
         const { id, username, password, firstName, lastName, createdOn } = data;
