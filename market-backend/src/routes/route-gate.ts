@@ -8,7 +8,10 @@ var app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-    secret: "TempSecret"
+    secret: "TempSecret",
+    cookie: {
+        secure: (process.env.NODE_ENV) ? true : false
+    }
 }));
 app.use(cookieParser())
 app.use('/user', userRouter);
