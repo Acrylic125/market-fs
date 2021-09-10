@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { Pool } from 'pg';
 import { Connection, createConnection } from 'typeorm';
 import { prependPathWithRoot } from '../env';
 import AsyncSafeLoadScheduler from '../scheduler/async-safeload-scheduler';
@@ -11,6 +12,16 @@ const KEY_DB_HOST = "db-host";
 const KEY_DB_PORT = "db-port";
 
 const DB_CONF = 'db-conf.json';
+
+export function createPool(config = DB_CONFIG) {
+    return new Pool({
+        database: config.database,
+        host: config.host,
+        port: config.port,
+        password: config.password,
+        user: config.username
+    })
+}
 
 function parseConfig() {
     const configRaw = fs.readFileSync(prependPathWithRoot(DB_CONF));
