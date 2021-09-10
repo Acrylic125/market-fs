@@ -69,9 +69,3 @@ export function isEmailTaken(email: string) {
 }
 
 userRepository.load();
-
-// var user = new User();
-// user.username = "Test_Username";
-// user.createdOn = new Date();
-// user.password = "abc";
-// createUser(user)
