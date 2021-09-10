@@ -20,7 +20,8 @@ You can boot up the application by running the .bat files or running the command
             <li>TypeORM (Postgres)</li>
             <li>Cookie Parser (Authentication)</li>
             <li>Express Session (Authentication)</li>
-         </ul>
+            <li>Connect-PG Simple (Session Store)</li>
+          </ul>
     </li>
     <li>
         The backend uses express to serve as an API communicator with the PostgresDB. The api is extended under /api

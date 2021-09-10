@@ -40,11 +40,11 @@ userRouter.post("/new", async (request, response, next) => {
 
 const EMAIL_IDENTIFIER_REGEX = /@$/gi.compile();
 
-export async function resolveUserFromSignInAs(signInAs: string) {
+async function resolveUserFromSignInAs(signInAs: string) {
     return (EMAIL_IDENTIFIER_REGEX.test(signInAs)) ? findOneByEmail(signInAs) : findOneByUsername(signInAs);
 }
 
-userRouter.get("/login", async (request, response, next) => {
+userRouter.get("/login", async (request, response) => {
     var { signInAs, password } = request.body;
     if (!(signInAs && password)) {
         response.status(400)
@@ -63,7 +63,6 @@ userRouter.get("/login", async (request, response, next) => {
         return;
     }
     response.status(200).json(user);
-    next();
 });
 
 export default userRouter;
