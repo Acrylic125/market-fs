@@ -14,6 +14,8 @@ app.use(session({
     store: new PGStore({
         pool: createPool()
     }),
+    saveUninitialized: true,
+    resave: true,
     cookie: {
         secure: false, // Temp
         signed: true,
