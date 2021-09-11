@@ -46,17 +46,18 @@ export default class User {
     @Column({ type: 'timestamptz' })
     createdOn: Date;
 
-    static parseFromRequestData(data: any) {
-        data.password = (data.password) ? hashPassword(data.password) : undefined;
+    static async parseFromRequestData(data: any) {
+        data.password = (data.password) ? await hashPassword(data.password) : undefined;
         return User.parseFromData(data); 
     }
 
     static parseFromData(data: any) {
-        const { id, username, password, firstName, lastName, createdOn } = data;
-        if (username && password && firstName && lastName) {
+        const { id, username, email, password, firstName, lastName, createdOn } = data;
+        if (email && username && password && firstName && lastName) {
             const user = new User();
             user.id = id;
             user.username = username;
+            user.email = email;
             user.password = password;
             user.firstName = firstName;
             user.lastName = lastName;

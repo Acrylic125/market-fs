@@ -1,6 +1,6 @@
 import { Router } from "express";
 import User, { CannotParseDataAsUserError } from "../user/user";
-import userRepository, { createUser, findOneByEmail, findOneByUsername, isUsernameTaken } from "../user/user-repo";
+import userRepository, { createUser, findOneByEmail, findOneByUsername, isEmailTaken, isUsernameTaken } from "../user/user-repo";
 import { jsonResponseError } from "./route-utils";
 import { verifyPassword } from '../user/password';
 
@@ -17,10 +17,10 @@ userRouter.route('/:id')
 
 userRouter.post("/new", async (request, response, next) => {
     try {
-        var user = User.parseFromRequestData(request.body);
-        if (await isUsernameTaken(user.username)) {
+        var user = await User.parseFromRequestData(request.body);
+        if (await isUsernameTaken(user.username) || await isEmailTaken(user.email)) {
             response.status(400)
-                .json(jsonResponseError("Username Taken"));
+                .json(jsonResponseError("Username or Email Taken"));
         } else {
             createUser(user);
             response.status(201).json(user);
