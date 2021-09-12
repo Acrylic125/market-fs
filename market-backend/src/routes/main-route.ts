@@ -12,9 +12,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(session({
     secret: "TempSecret",
     store: new PGStore({
-        pool: createPool()
+        pool: createPool(),
+        tableName: "sessions"
     }),
-    saveUninitialized: true,
+    saveUninitialized: false,
     resave: true,
     cookie: {
         secure: false, // Temp
