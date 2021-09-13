@@ -11,11 +11,19 @@ async function resolveUserFromSignInAs(signInAs: string) {
 }
 
 use(new Strategy(async (signInAs, password, done) => {
-    var user = await resolveUserFromSignInAs(signInAs);
-    if (user) {
-
-    } else {
-        done(null, false);
+    try {
+        var user = await resolveUserFromSignInAs(signInAs);
+        if (!user) {
+            done(null, false);
+            return;
+        } 
+        if (!verifyPassword(user.password, password)) {
+            done(null, false);
+            return;
+        } 
+        done(null, user);
+    } catch (err) {
+        done(err, false);
     }
 }));
 

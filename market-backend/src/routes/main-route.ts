@@ -5,6 +5,7 @@ import session from 'express-session';
 import { PGStore } from 'connect-pg-simple';
 import { createPool } from "../db/db";
 import authRouter from "./auth-route";
+import { initialize, session } from "passport";
 
 var app = express();
 
@@ -24,7 +25,9 @@ app.use(session({
         sameSite: 'strict'
     }
 }));
-app.use(cookieParser())
+app.use(cookieParser());
+app.use(initialize());
+app.use(session());
 app.use('/user', userRouter);
 app.use('/auth', authRouter);
 
