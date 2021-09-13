@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import { PGStore } from 'connect-pg-simple';
 import { createPool } from "../db/db";
+import authRouter from "./auth-route";
 
 var app = express();
 
@@ -25,5 +26,6 @@ app.use(session({
 }));
 app.use(cookieParser())
 app.use('/user', userRouter);
+app.use('/auth', authRouter);
 
 export default app;
