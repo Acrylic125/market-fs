@@ -3,6 +3,8 @@ import User, { CannotParseDataAsUserError } from "../user/user";
 import userRepository, { createUser, findOneByEmail, findOneByUsername, isEmailTaken, isUsernameTaken } from "../user/user-repo";
 import { jsonResponseError } from "./route-utils";
 import { verifyPassword } from '../user/password';
+import { authenticate } from 'passport';
+import passportLocal from 'passport-local';
 
 const userRouter = Router();
 
@@ -22,10 +24,10 @@ userRouter.post("/new", async (request, response, next) => {
             response.status(400)
                 .json(jsonResponseError("Username or Email Taken"));
         } else {
+            
             createUser(user);
             response.status(201).json(user);
         }
-        next();
     } catch (err) {
         if (err instanceof CannotParseDataAsUserError) {
             response.status(400)
