@@ -1,4 +1,4 @@
-import { authenticate, use } from 'passport';
+import { authenticate, use, serializeUser, deserializeUser } from 'passport';
 import { Strategy } from 'passport-local'; 
 import { Router } from 'express'; 
 import { findOneByEmail, findOneByUsername } from '../user/user-repo';
@@ -9,6 +9,19 @@ const EMAIL_IDENTIFIER_REGEX = /@$/gi.compile();
 async function resolveUserFromSignInAs(signInAs: string) {
     return (EMAIL_IDENTIFIER_REGEX.test(signInAs)) ? findOneByEmail(signInAs) : findOneByUsername(signInAs);
 }
+
+serializeUser((user, done) => {
+    done(null, (user as any).username);
+});
+
+deserializeUser(async (id, done) => {
+    try {
+        var user = await resolveUserFromSignInAs(id as string);
+        done(null, (user) ? user : false);
+    } catch (err) {
+        done(err, false);
+    }
+});
 
 use(new Strategy(async (signInAs, password, done) => {
     try {
