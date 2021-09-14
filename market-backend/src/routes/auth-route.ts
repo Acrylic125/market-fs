@@ -42,7 +42,7 @@ use(new Strategy(async (signInAs, password, done) => {
 
 const authRouter = Router();
 authRouter.post("/login", authenticate('local'), (request, response) => {
-
+    response.status(200);
 });
 
 export default authRouter;
