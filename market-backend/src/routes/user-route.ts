@@ -1,8 +1,10 @@
 import { Router } from "express";
 import User, { CannotParseDataAsUserError } from "../user/user";
-import { createUser, isEmailTaken, isUsernameTaken } from "../user/user-repo";
+import { createUser, findOneByEmail, findOneByUsername, isEmailTaken, isUsernameTaken } from "../user/user-repo";
 import { jsonResponseError } from "./route-utils";
 import passport from 'passport';
+import { Strategy } from 'passport-local';
+import { verifyPassword } from "../user/password";
 
 const userRouter = Router();
 
@@ -42,9 +44,34 @@ userRouter.post("/signup", async (req, res, next) => {
 });
 
 // Logging in and authentication.
+passport.use(new Strategy(async (username, password, done) => {
+    var user = await resolveUserFromSignInAs(username);
+    try {
+        return done(null,
+                    (user && await verifyPassword(user!.password, password)) ? user : false);
+    } catch (err) {
+        return done(err, false);
+    }
+}));
+
+passport.serializeUser((user, done) => {
+    done(null, (user as any).username);
+});
+
+passport.deserializeUser((id, done) => {
+    done(null, { id });
+});
+
 userRouter.post("/login", passport.authenticate('local'), (req, res, next) => {
     res.status(306)
        .redirect("/");
 });
+
+
+const EMAIL_IDENTIFIER_REGEX = /@$/gi.compile();
+
+async function resolveUserFromSignInAs(signInAs: string) {
+    return (EMAIL_IDENTIFIER_REGEX.test(signInAs)) ? findOneByEmail(signInAs) : findOneByUsername(signInAs);
+}
 
 export default userRouter;
