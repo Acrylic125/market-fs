@@ -22,11 +22,26 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.post("/login", passport.authenticate('local'), (request, response) => {
+    console.log("Login Success!");
+    response.status(300).redirect("/success");
+});
+
+app.post("/success", (request, response, next) => {
+    if (request.isAuthenticated()) {
+        console.log("Success!!!!!");
+        response.status(200).json({  message: "Yes!" })
+    } else {
+        console.log("Failed!!!!!");
+        response.status(400).json({  message: "No!" })
+    }
+});
+
 passport.use(new Strategy(async (username, password, done) => {
     var user = await findOneByUsername(username);
     try {
         return done(null,
-                    (!user && await verifyPassword(user!.password, password)) ? user : false);
+                    (user && await verifyPassword(user!.password, password)) ? user : false);
     } catch (err) {
         return done(err, false);
     }
