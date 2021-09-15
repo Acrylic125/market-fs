@@ -24,7 +24,7 @@ userRouter.post("/new", async (request, response, next) => {
             response.status(400)
                 .json(jsonResponseError("Username or Email Taken"));
         } else {
-            
+        
             createUser(user);
             response.status(201).json(user);
         }
