@@ -28,9 +28,12 @@ userRouter.post("/signup", async (req, res, next) => {
             // Creates the user in the db if nothing fails.
             createUser(user);
             req.login(user, (err) => {
-                console.log("err! ", err);
+                if (err) {
+                    return next(err);
+                } else {
+                    return res.status(201).json(user);
+                }
             });
-            res.status(201);
         }
     } catch (err) {
         // Catches an error 
