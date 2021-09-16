@@ -16,6 +16,7 @@ userRouter.route("/:id")
 
 // Signing up
 userRouter.post("/signup", async (req, res, next) => {
+    console.log("Signup!");
     try {
         // Tries to parse the given request body.
         var user = await User.parseFromRequestData(req.body);
@@ -69,7 +70,6 @@ userRouter.post("/login", passport.authenticate('local'), (req, res, next) => {
     res.status(306)
        .redirect("/");
 });
-
 
 const EMAIL_IDENTIFIER_REGEX = /@$/gi.compile();
 

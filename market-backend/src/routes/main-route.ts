@@ -19,6 +19,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Use routers
-app.use(userRouter);
+app.use("/user", userRouter);
 
 export default app;
