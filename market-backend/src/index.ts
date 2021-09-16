@@ -1,3 +1,3 @@
-import app from "./routes/test-auth";
+import app from "./routes/main-route";
 
 app.listen(4000);
