@@ -1,6 +1,6 @@
 
-export function jsonResponseError(reason: string) {
+export function respErr(reason: string) {
     return {
-        reason: reason
+        message: reason
     };
 }
