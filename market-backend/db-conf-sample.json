@@ -1,7 +1,0 @@
-{
-    "db-name": "market-app",
-    "db-username": "postgres",
-    "db-password": "your_password",
-    "db-host": "localhost",
-    "db-port": 5432
-}
