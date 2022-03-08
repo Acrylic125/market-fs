@@ -1,2 +1,4 @@
-package com.acrylic.entity;public class UserRequest {
+package com.acrylic.requests;
+
+public class UserRequest {
 }
