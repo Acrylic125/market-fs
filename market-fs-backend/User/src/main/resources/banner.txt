@@ -1,0 +1,8 @@
+,--. ,--.
+|  | |  |  ,---.   ,---.  ,--.--.
+|  | |  | (  .-'  | .-. : |  .--'
+'  '-'  ' .-'  `) \   --. |  |
+ `-----'  `----'   `----' `--'
+
+${application.title} ${application.version}
+Using Spring Boot ${spring-boot.version}

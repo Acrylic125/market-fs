@@ -3,6 +3,7 @@ package com.acrylic.controller;
 import com.acrylic.entity.User;
 import com.acrylic.requests.UserRequestBody;
 import com.acrylic.service.UserService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

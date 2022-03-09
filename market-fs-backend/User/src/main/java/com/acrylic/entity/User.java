@@ -26,8 +26,10 @@ public class User {
             generator = "user_id_sequence"
     )
     private Long id;
+    @Column(unique = true)
     private String username;
     private String password_hash;
+    @Column(unique = true)
     private String email;
     private LocalDateTime firstJoined;
     private LocalDate dateOfBirth;
