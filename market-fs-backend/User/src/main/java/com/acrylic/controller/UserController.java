@@ -13,7 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "/api/v1")
+@RequestMapping(path = "/api/v1/users")
 public record UserController(UserService userService) {
 
     @GetMapping("id/{id}")
@@ -25,11 +25,11 @@ public record UserController(UserService userService) {
         return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
     }
 
-    @GetMapping("username/username")
+    @GetMapping("username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-        Optional<User> userOptional = userService.findUserById(username);
+        Optional<User> userOptional = userService.findUserByUsername(username);
         if (userOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot find user with id, '" + id + "'.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot find user with username, '" + username + "'.");
         }
         return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
     }
