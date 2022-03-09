@@ -16,11 +16,20 @@ import java.util.Optional;
 @RequestMapping(path = "/api/v1")
 public record UserController(UserService userService) {
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
+    @GetMapping("id/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
         Optional<User> userOptional = userService.findUserById(id);
         if (userOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot find user with id, " + id + ".");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot find user with id, '" + id + "'.");
+        }
+        return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
+    }
+
+    @GetMapping("username/username")
+    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+        Optional<User> userOptional = userService.findUserById(username);
+        if (userOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot find user with id, '" + id + "'.");
         }
         return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
     }

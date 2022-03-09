@@ -13,4 +13,8 @@ public record UserService(UserRepository userRepository) {
         return userRepository.findById(id);
     }
 
+    public Optional<User> findUserByUsername(String username) {
+        return userRepository.findUserByUsername(username);
+    }
+
 }
