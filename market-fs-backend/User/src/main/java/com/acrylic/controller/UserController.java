@@ -1,15 +1,14 @@
 package com.acrylic.controller;
 
 import com.acrylic.entity.User;
+import com.acrylic.requests.UserRequestBody;
 import com.acrylic.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
@@ -32,6 +31,19 @@ public record UserController(UserService userService) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot find user with username, '" + username + "'.");
         }
         return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
+    }
+
+    @PostMapping("new")
+    public ResponseEntity<Long> postUser(@RequestBody UserRequestBody requestBody) {
+        User user = User.builder()
+                .username(requestBody.username())
+                .password_hash(requestBody.password())
+                .email(requestBody.email())
+                .dateOfBirth(requestBody.dateOfBirth())
+                .firstJoined(LocalDateTime.now())
+                .build();
+        User posted = userService.postUser(user);
+        return new ResponseEntity<>(posted.getId(), HttpStatus.OK);
     }
 
 }

@@ -32,4 +32,15 @@ public class User {
     private LocalDateTime firstJoined;
     private LocalDate dateOfBirth;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password_hash='" + password_hash + '\'' +
+                ", email='" + email + '\'' +
+                ", firstJoined=" + firstJoined +
+                ", dateOfBirth=" + dateOfBirth +
+                '}';
+    }
 }
