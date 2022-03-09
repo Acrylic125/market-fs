@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -18,9 +19,10 @@ public record UserController(UserService userService) {
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable Long id) {
         Optional<User> userOptional = userService.findUserById(id);
-        return new ResponseEntity<>(
-                userOptional.orElse(null),
-                HttpStatus.OK);
+        if (userOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot find user with id, " + id + ".");
+        }
+        return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
     }
 
 }
