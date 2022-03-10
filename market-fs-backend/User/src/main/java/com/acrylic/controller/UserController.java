@@ -3,12 +3,13 @@ package com.acrylic.controller;
 import com.acrylic.entity.User;
 import com.acrylic.requests.UserRequestBody;
 import com.acrylic.service.UserService;
-import org.springframework.data.domain.Pageable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
