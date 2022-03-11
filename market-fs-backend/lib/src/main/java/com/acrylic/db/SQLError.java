@@ -3,6 +3,6 @@ package com.acrylic.db;
 public enum SQLError {
 
     DUPLICATE,
-    TRUNCATED_RIGHT
+    DATA_SIZE_OUT_OF_BOUNDS
 
 }
