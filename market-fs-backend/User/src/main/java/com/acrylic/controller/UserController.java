@@ -2,7 +2,6 @@ package com.acrylic.controller;
 
 import com.acrylic.entity.User;
 import com.acrylic.requests.UserRequestBody;
-import com.acrylic.response.AppResponseFactory;
 import com.acrylic.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

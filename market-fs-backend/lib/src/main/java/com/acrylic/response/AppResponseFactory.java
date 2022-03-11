@@ -12,7 +12,7 @@ public class AppResponseFactory {
         return appResponseFactory;
     }
 
-    private record SimpleResponse<T>(T message) { }
+    private record SimpleResponse<T>(T message) {}
 
     public ResponseEntity<Object> createDefaultErrorResponse() {
         return new ResponseEntity<>(createSimpleResponse("Unknown Error!"), HttpStatus.INTERNAL_SERVER_ERROR);

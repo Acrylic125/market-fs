@@ -23,7 +23,6 @@ public record UserControllerExceptionHandlers(DataSource dataSource) {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDataIntegrityViolationException(final DataIntegrityViolationException ex) {
         final Throwable cause = ex.getMostSpecificCause();
-        System.out.println(sqlResolver());
         if (cause instanceof SQLException) {
             Optional<SQLError> optionalError = sqlResolver().resolve((SQLException) cause);
             if (optionalError.isPresent()) {
