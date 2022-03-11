@@ -1,38 +1,37 @@
 package com.acrylic.controller;
 
+import com.acrylic.db.SQLError;
+import com.acrylic.db.SQLStateErrorResolver;
 import com.acrylic.response.AppResponseFactory;
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
-import org.springframework.jdbc.support.SQLErrorCodes;
-import org.springframework.jdbc.support.SQLErrorCodesFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.util.Optional;
 
 @ControllerAdvice(assignableTypes = UserController.class)
 public record UserControllerExceptionHandlers(DataSource dataSource) {
 
-    private SQLErrorCodes getErrorCodes() {
-        return SQLErrorCodesFactory.getInstance().getErrorCodes(dataSource);
+    public SQLStateErrorResolver<SQLException> sqlResolver() {
+        return SQLStateErrorResolver.postgres();
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDataIntegrityViolationException(final DataIntegrityViolationException ex) {
         final Throwable cause = ex.getMostSpecificCause();
+        System.out.println(sqlResolver());
         if (cause instanceof SQLException) {
-            final String state = ((SQLException) cause).getSQLState();
-            final SQLErrorCodes errorCodes = getErrorCodes();
-
-            // Check for duplicate error.
-            if (ArrayUtils.contains(errorCodes.getDuplicateKeyCodes(), state))
-                return handleDuplicateUserError();
-            System.out.println(state + " " + Arrays.toString(errorCodes.getTransientDataAccessResourceCodes()));
+            Optional<SQLError> optionalError = sqlResolver().resolve((SQLException) cause);
+            if (optionalError.isPresent()) {
+                return switch (optionalError.get()) {
+                    case DUPLICATE -> handleDuplicateUserError();
+                    case DATA_SIZE_OUT_OF_BOUNDS -> handleDataSizeOutOfBoundsError();
+                };
+            }
         }
 
         return AppResponseFactory.getInstance().createDefaultErrorResponse();
@@ -41,6 +40,13 @@ public record UserControllerExceptionHandlers(DataSource dataSource) {
     public ResponseEntity<Object> handleDuplicateUserError() {
         return new ResponseEntity<>(
                 AppResponseFactory.getInstance().createSimpleResponse("There is already a user with the same username or email."),
+                HttpStatus.UNPROCESSABLE_ENTITY
+        );
+    }
+
+    public ResponseEntity<Object> handleDataSizeOutOfBoundsError() {
+        return new ResponseEntity<>(
+                AppResponseFactory.getInstance().createSimpleResponse("Some values in the body is out of bounds."),
                 HttpStatus.UNPROCESSABLE_ENTITY
         );
     }

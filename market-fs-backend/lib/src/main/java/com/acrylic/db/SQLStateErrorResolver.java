@@ -3,12 +3,21 @@ package com.acrylic.db;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SQLStateErrorResolver<E extends SQLException>
     implements SQLErrorResolver<E>, Cloneable {
+
+    private static final SQLStateErrorResolver<SQLException> DEFAULT_POSTGRES =
+            builder()
+                    .resolve(SQLError.DUPLICATE, "21000")
+                    .resolve(SQLError.DATA_SIZE_OUT_OF_BOUNDS, "22001")
+                    .build();
+
+    public static SQLStateErrorResolver<SQLException> postgres() {
+        return DEFAULT_POSTGRES;
+    }
 
     public static <E extends SQLException> Builder<E> builder() {
         return new Builder<>();
@@ -30,7 +39,7 @@ public class SQLStateErrorResolver<E extends SQLException>
         }
 
         public Builder<E> resolve(SQLError sqlError, String state) {
-            this.stateErrorBindings.put(sqlError, state);
+            this.stateErrorBindings.put(state, sqlError);
             return this;
         }
 
@@ -64,5 +73,25 @@ public class SQLStateErrorResolver<E extends SQLException>
     public SQLStateErrorResolver<E> clone() {
         return new SQLStateErrorResolver<>(
                 new HashMap<>(this.stateErrorBindings));
+    }
+
+    @Override
+    public String toString() {
+        return """
+                Bindings: %s,
+                Resolved: %s,
+                Unresolved: %s
+                """.formatted(this.stateErrorBindings.toString(), this.resolvedSQLErrors().toString(), this.unresolvedSQLErrors().toString());
+    }
+
+    public Collection<SQLError> resolvedSQLErrors() {
+        return stateErrorBindings.values();
+    }
+
+    public Collection<SQLError> unresolvedSQLErrors() {
+        Collection<SQLError> resolved = this.resolvedSQLErrors();
+        return Arrays.stream(SQLError.values())
+                .filter(sqlError -> !resolved.contains(sqlError))
+                .collect(Collectors.toList());
     }
 }
