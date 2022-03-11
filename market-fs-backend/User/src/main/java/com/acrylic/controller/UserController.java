@@ -3,13 +3,11 @@ package com.acrylic.controller;
 import com.acrylic.entity.User;
 import com.acrylic.requests.UserRequestBody;
 import com.acrylic.service.UserService;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -39,12 +37,25 @@ public record UserController(UserService userService) {
     public ResponseEntity<Long> postUser(@RequestBody UserRequestBody requestBody) {
         User user = User.builder()
                 .username(requestBody.username())
-                .password_hash(requestBody.password())
+                .passwordHash(requestBody.password())
                 .email(requestBody.email())
                 .dateOfBirth(requestBody.dateOfBirth())
                 .firstJoined(LocalDateTime.now())
                 .build();
-        User posted = userService.postUser(user);
+        User posted = userService.createUser(user);
+        return new ResponseEntity<>(posted.getId(), HttpStatus.OK);
+    }
+
+    @PutMapping("id/{id}")
+    public ResponseEntity<Long> putUser(@PathVariable Long id, @RequestBody UserRequestBody requestBody) {
+        User user = User.builder()
+                .username(requestBody.username())
+                .passwordHash(requestBody.password())
+                .email(requestBody.email())
+                .dateOfBirth(requestBody.dateOfBirth())
+                .firstJoined(LocalDateTime.now())
+                .build();
+        User posted = userService.createUser(user);
         return new ResponseEntity<>(posted.getId(), HttpStatus.OK);
     }
 

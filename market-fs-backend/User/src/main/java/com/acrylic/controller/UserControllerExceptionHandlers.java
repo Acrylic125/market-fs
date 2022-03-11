@@ -23,20 +23,22 @@ public record UserControllerExceptionHandlers(DataSource dataSource) {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDataIntegrityViolationException(final DataIntegrityViolationException ex) {
         final Throwable cause = ex.getMostSpecificCause();
-        final AppResponseFactory responseFactory = AppResponseFactory.getInstance();
         if (cause instanceof SQLException) {
             final String state = ((SQLException) cause).getSQLState();
             final SQLErrorCodes errorCodes = getErrorCodes();
 
             // Check for duplicate error.
-            if (ArrayUtils.contains(errorCodes.getDuplicateKeyCodes(), state)) {
-                return new ResponseEntity<>(
-                        responseFactory.createSimpleResponse("There is already a user with the same username or email."),
-                        HttpStatus.UNPROCESSABLE_ENTITY
-                );
-            }
+            if (ArrayUtils.contains(errorCodes.getDuplicateKeyCodes(), state))
+                return handleDuplicateUserError();
         }
-        return responseFactory.createDefaultErrorResponse();
+        return AppResponseFactory.getInstance().createDefaultErrorResponse();
+    }
+
+    public ResponseEntity<Object> handleDuplicateUserError() {
+        return new ResponseEntity<>(
+                AppResponseFactory.getInstance().createSimpleResponse("There is already a user with the same username or email."),
+                HttpStatus.UNPROCESSABLE_ENTITY
+        );
     }
 
 }

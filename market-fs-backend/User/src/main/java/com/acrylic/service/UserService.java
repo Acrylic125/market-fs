@@ -2,7 +2,6 @@ package com.acrylic.service;
 
 import com.acrylic.entity.User;
 import com.acrylic.repository.UserRepository;
-import com.acrylic.requests.UserRequestBody;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,8 +17,12 @@ public record UserService(UserRepository userRepository) {
         return userRepository.findUserByUsername(username);
     }
 
-    public User postUser(User user) {
+    public User createUser(User user) {
         return userRepository.save(user);
+    }
+
+    public User updateUserById(Long id, User user) {
+        return userRepository.(user);
     }
 
 }

@@ -26,12 +26,15 @@ public class User {
             generator = "user_id_sequence"
     )
     private Long id;
-    @Column(unique = true)
+    @Column(unique = true, length = 32)
     private String username;
-    private String password_hash;
+    @Column(name = "password_hash")
+    private String passwordHash;
     @Column(unique = true)
     private String email;
+    @Column(name = "first_joined")
     private LocalDateTime firstJoined;
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
     @Override
@@ -39,7 +42,7 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", password_hash='" + password_hash + '\'' +
+                ", password_hash='" + passwordHash + '\'' +
                 ", email='" + email + '\'' +
                 ", firstJoined=" + firstJoined +
                 ", dateOfBirth=" + dateOfBirth +
