@@ -5,6 +5,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLErrorCodes;
 import org.springframework.jdbc.support.SQLErrorCodesFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 @ControllerAdvice(assignableTypes = UserController.class)
 public record UserControllerExceptionHandlers(DataSource dataSource) {
@@ -30,7 +32,9 @@ public record UserControllerExceptionHandlers(DataSource dataSource) {
             // Check for duplicate error.
             if (ArrayUtils.contains(errorCodes.getDuplicateKeyCodes(), state))
                 return handleDuplicateUserError();
+            System.out.println(state + " " + Arrays.toString(errorCodes.getTransientDataAccessResourceCodes()));
         }
+
         return AppResponseFactory.getInstance().createDefaultErrorResponse();
     }
 

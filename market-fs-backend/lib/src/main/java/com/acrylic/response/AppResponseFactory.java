@@ -1,5 +1,6 @@
 package com.acrylic.response;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -19,6 +20,9 @@ public class AppResponseFactory {
 
     public <T> SimpleResponse<T> createSimpleResponse(T message) {
         return new SimpleResponse<>(message);
+    }
+
+    public void prettyPrintError(DataIntegrityViolationException ex) {
     }
 
 }
