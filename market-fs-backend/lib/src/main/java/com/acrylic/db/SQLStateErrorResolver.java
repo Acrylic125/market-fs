@@ -14,10 +14,20 @@ public class SQLStateErrorResolver<E extends SQLException>
         return new Builder<>();
     }
 
-    public static class Builder<E extends SQLException> {
-        private final Map<Object, SQLError> stateErrorBindings = new HashMap<>();
+    public static <E extends SQLException> Builder<E> builder(SQLStateErrorResolver<E> resolver) {
+        return new Builder<>(resolver.stateErrorBindings);
+    }
 
-        Builder() {}
+    public static class Builder<E extends SQLException> {
+        private final Map<Object, SQLError> stateErrorBindings;
+
+        Builder() {
+            this(new HashMap<>());
+        }
+
+        Builder(Map<Object, SQLError> stateErrorBindings) {
+            this.stateErrorBindings = stateErrorBindings;
+        }
 
         public Builder<E> resolve(SQLError sqlError, String state) {
             this.stateErrorBindings.put(sqlError, state);
@@ -50,5 +60,9 @@ public class SQLStateErrorResolver<E extends SQLException>
         return Optional.ofNullable(stateErrorBindings.get(exception.getSQLState()));
     }
 
-
+    @Override
+    public SQLStateErrorResolver<E> clone() {
+        return new SQLStateErrorResolver<>(
+                new HashMap<>(this.stateErrorBindings));
+    }
 }
