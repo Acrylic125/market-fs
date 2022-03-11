@@ -2,6 +2,7 @@ package com.acrylic.controller;
 
 import com.acrylic.entity.User;
 import com.acrylic.requests.UserRequestBody;
+import com.acrylic.response.AppResponseFactory;
 import com.acrylic.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,16 +48,14 @@ public record UserController(UserService userService) {
     }
 
     @PutMapping("id/{id}")
-    public ResponseEntity<Long> putUser(@PathVariable Long id, @RequestBody UserRequestBody requestBody) {
+    public ResponseEntity<Integer> putUser(@PathVariable Long id, @RequestBody UserRequestBody requestBody) {
         User user = User.builder()
                 .username(requestBody.username())
-                .passwordHash(requestBody.password())
                 .email(requestBody.email())
                 .dateOfBirth(requestBody.dateOfBirth())
-                .firstJoined(LocalDateTime.now())
                 .build();
-        User posted = userService.createUser(user);
-        return new ResponseEntity<>(posted.getId(), HttpStatus.OK);
+        Integer records = userService.updateUserById(id, user);
+        return new ResponseEntity<>(records, HttpStatus.OK);
     }
 
 }

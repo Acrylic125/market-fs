@@ -1,12 +1,7 @@
 package com.acrylic.repository;
 
-import com.acrylic.entity.User;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class UserRepositoryDynamicImpl
     implements UserRepositoryDynamic {

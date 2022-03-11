@@ -21,8 +21,8 @@ public record UserService(UserRepository userRepository) {
         return userRepository.save(user);
     }
 
-    public User updateUserById(Long id, User user) {
-        return userRepository.(user);
+    public Integer updateUserById(Long id, User user) {
+        return userRepository.updateUserById(id, user.getUsername(), user.getEmail(), user.getDateOfBirth());
     }
 
 }
