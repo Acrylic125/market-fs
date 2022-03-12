@@ -11,7 +11,7 @@ public class SQLStateErrorResolver<E extends SQLException>
 
     private static final SQLStateErrorResolver<SQLException> DEFAULT_POSTGRES =
             builder()
-                    .resolve(SQLError.DUPLICATE, "21000")
+                    .resolve(SQLError.DUPLICATE, "21000", "23505")
                     .resolve(SQLError.DATA_SIZE_OUT_OF_BOUNDS, "22001")
                     .build();
 

@@ -31,10 +31,13 @@ public record UserService(UserRepository userRepository) {
             return userRepository.save(user);
         } catch (DataIntegrityViolationException ex) {
             final Throwable cause = ex.getMostSpecificCause();
+            System.out.println("Test 1");
             if (cause instanceof SQLException) {
                 Optional<SQLError> optionalError = sqlResolver().resolve((SQLException) cause);
+                System.out.println("Test 2 " + optionalError + " " + ((SQLException) cause).getSQLState());
                 if (optionalError.isPresent()) {
                     if (optionalError.get() == SQLError.DUPLICATE) {
+                        System.out.println("TTTTT");
                         throw new UserDuplicateException("User with the same username or email already exists.");
                     }
                 }
@@ -44,7 +47,6 @@ public record UserService(UserRepository userRepository) {
     }
 
     public Integer updateUserById(Long id, User user) {
-        System.out.println("Tesssttttt");
         try {
             return userRepository.updateUserById(id, user.getUsername(), user.getEmail(), user.getDateOfBirth());
         } catch (Throwable ex) {
