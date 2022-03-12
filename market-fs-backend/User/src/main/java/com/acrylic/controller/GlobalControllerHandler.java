@@ -8,10 +8,4 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalControllerHandler {
 
-    @ExceptionHandler(Throwable.class)
-    public ResponseEntity<Object> handleThrowable(Throwable throwable) {
-        throwable.printStackTrace();
-        return AppResponseFactory.getInstance().createDefaultErrorResponse();
-    }
-
 }

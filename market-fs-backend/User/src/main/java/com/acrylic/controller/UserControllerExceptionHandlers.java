@@ -8,12 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.Optional;
 
-@ControllerAdvice(assignableTypes = UserController.class)
+//@ControllerAdvice(assignableTypes = UserController.class)
 public record UserControllerExceptionHandlers(DataSource dataSource) {
 
     public SQLStateErrorResolver<SQLException> sqlResolver() {
@@ -23,6 +24,7 @@ public record UserControllerExceptionHandlers(DataSource dataSource) {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDataIntegrityViolationException(final DataIntegrityViolationException ex) {
         final Throwable cause = ex.getMostSpecificCause();
+        System.out.println(ex.getClass());
         if (cause instanceof SQLException) {
             Optional<SQLError> optionalError = sqlResolver().resolve((SQLException) cause);
             if (optionalError.isPresent()) {
