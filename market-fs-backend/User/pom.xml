@@ -32,6 +32,10 @@
             <artifactId>postgresql</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.acrylic</groupId>
             <artifactId>lib</artifactId>
             <version>1.0-SNAPSHOT</version>
