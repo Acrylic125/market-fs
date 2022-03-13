@@ -3,6 +3,7 @@ package com.acrylic.service;
 import com.acrylic.db.SQLError;
 import com.acrylic.db.SQLStateErrorResolver;
 import com.acrylic.entity.User;
+import com.acrylic.exceptions.UserDataSizeOutOfBoundsException;
 import com.acrylic.exceptions.UserDuplicateException;
 import com.acrylic.repository.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,9 +29,9 @@ public record UserService(UserRepository userRepository) {
 
     private RuntimeException handleCreateUpdateUserException(DataIntegrityViolationException ex) {
         Optional<SQLError> optionalError = this.extractSQLError(ex);
-        return optionalError.<RuntimeException>map(sqlError -> switch (sqlError) {
+        return optionalError.map(sqlError -> switch (sqlError) {
             case DUPLICATE -> new UserDuplicateException("User with the same username or email already exists.");
-            case DATA_SIZE_OUT_OF_BOUNDS -> new UserDuplicateException("User data provided is out of bounds.");
+            case DATA_SIZE_OUT_OF_BOUNDS -> new UserDataSizeOutOfBoundsException("User data provided is out of bounds.");
         }).orElse(ex);
     }
 

@@ -25,14 +25,23 @@ public class User {
             strategy = GenerationType.SEQUENCE,
             generator = "user_id_sequence"
     )
+    @Column(name = "user_id",
+            nullable = false)
     private Long id;
-    @Column(unique = true, length = 32)
+    @Column(name = "username",
+            unique = true,
+            length = 32,
+            nullable = false)
     private String username;
-    @Column(name = "password_hash")
+    @Column(name = "password_hash",
+            nullable = false)
     private String passwordHash;
-    @Column(unique = true)
+    @Column(name = "email",
+            unique = true,
+            nullable = false)
     private String email;
-    @Column(name = "first_joined")
+    @Column(name = "first_joined",
+            nullable = false)
     private LocalDateTime firstJoined;
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
