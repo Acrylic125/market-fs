@@ -18,6 +18,23 @@ public record UserService(UserRepository userRepository) {
         return SQLStateErrorResolver.postgres();
     }
 
+    // Exception Handlers
+    private Optional<SQLError> extractSQLError(DataIntegrityViolationException ex) {
+        final Throwable cause = ex.getMostSpecificCause();
+        if (cause instanceof SQLException)
+            return sqlResolver().resolve((SQLException) cause);
+        return Optional.empty();
+    }
+
+    private RuntimeException handleCreateUpdateUserException(DataIntegrityViolationException ex) {
+        Optional<SQLError> optionalError = this.extractSQLError(ex);
+        return optionalError.<RuntimeException>map(sqlError -> switch (sqlError) {
+            case DUPLICATE -> new UserDuplicateException("User with the same username or email already exists.");
+            case DATA_SIZE_OUT_OF_BOUNDS -> new UserDuplicateException("User data provided is out of bounds.");
+        }).orElse(ex);
+    }
+
+    // User Methods
     public Optional<User> findUserById(Long id) {
         return userRepository.findById(id);
     }
@@ -30,28 +47,15 @@ public record UserService(UserRepository userRepository) {
         try {
             return userRepository.save(user);
         } catch (DataIntegrityViolationException ex) {
-            final Throwable cause = ex.getMostSpecificCause();
-            System.out.println("Test 1");
-            if (cause instanceof SQLException) {
-                Optional<SQLError> optionalError = sqlResolver().resolve((SQLException) cause);
-                System.out.println("Test 2 " + optionalError + " " + ((SQLException) cause).getSQLState());
-                if (optionalError.isPresent()) {
-                    if (optionalError.get() == SQLError.DUPLICATE) {
-                        System.out.println("TTTTT");
-                        throw new UserDuplicateException("User with the same username or email already exists.");
-                    }
-                }
-            }
-            throw ex;
+            throw handleCreateUpdateUserException(ex);
         }
     }
 
     public Integer updateUserById(Long id, User user) {
         try {
             return userRepository.updateUserById(id, user.getUsername(), user.getEmail(), user.getDateOfBirth());
-        } catch (Throwable ex) {
-            System.out.println(ex.getClass());
-            throw ex;
+        } catch (DataIntegrityViolationException ex) {
+            throw handleCreateUpdateUserException(ex);
         }
     }
 
