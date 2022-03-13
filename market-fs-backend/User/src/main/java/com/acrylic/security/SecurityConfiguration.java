@@ -1,30 +1,28 @@
 package com.acrylic.security;
 
+import com.acrylic.entity.User;
 import com.acrylic.repository.UserRepository;
+import com.acrylic.service.UserService;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @EnableWebSecurity
 public class SecurityConfiguration
         extends WebSecurityConfigurerAdapter {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public SecurityConfiguration(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public SecurityConfiguration(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(username -> userRepository
-                .findByUsername(username)
-                .orElseThrow(
-                        () -> new UsernameNotFoundException(
-                                format("User: %s, not found", username)
-                        )
-                ));
+        auth.userDetailsService(username ->
+            userService.findUserByUsername(username));
     }
 
     @Override

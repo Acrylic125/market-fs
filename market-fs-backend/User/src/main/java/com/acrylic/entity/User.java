@@ -1,10 +1,17 @@
 package com.acrylic.entity;
 
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Indexed;
 
+import javax.management.relation.Role;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -13,7 +20,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
-public class User {
+public class User implements UserDetails {
 
     @Id
     @SequenceGenerator(
@@ -45,6 +52,10 @@ public class User {
     private LocalDateTime firstJoined;
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
+    @Column(name = "enabled")
+    private boolean enabled = true;
+    @Transient
+    private Set<? extends GrantedAuthority> authorities = new HashSet<>();
 
     @Override
     public String toString() {
@@ -56,5 +67,35 @@ public class User {
                 ", firstJoined=" + firstJoined +
                 ", dateOfBirth=" + dateOfBirth +
                 '}';
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.passwordHash;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return enabled;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return enabled;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return enabled;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 }
