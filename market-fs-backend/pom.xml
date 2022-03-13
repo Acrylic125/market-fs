@@ -78,6 +78,13 @@
                 <type>pom</type>
             </dependency>
             <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>42.3.3</version>
+                <scope>runtime</scope>
+            </dependency>
+            <!-- Spring-->
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>${spring.boot.dependencies.version}</version>
@@ -88,10 +95,9 @@
                 <version>${spring.boot.dependencies.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.postgresql</groupId>
-                <artifactId>postgresql</artifactId>
-                <version>42.3.3</version>
-                <scope>runtime</scope>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+                <version>${spring.boot.dependencies.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

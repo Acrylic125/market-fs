@@ -5,6 +5,7 @@ import com.acrylic.db.SQLStateErrorResolver;
 import com.acrylic.entity.User;
 import com.acrylic.exceptions.UserDataSizeOutOfBoundsException;
 import com.acrylic.exceptions.UserDuplicateException;
+import com.acrylic.exceptions.UserNotFoundException;
 import com.acrylic.repository.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -22,9 +23,9 @@ public record UserService(UserRepository userRepository) {
     // Exception Handlers
     private Optional<SQLError> extractSQLError(DataIntegrityViolationException ex) {
         final Throwable cause = ex.getMostSpecificCause();
-        if (cause instanceof SQLException)
-            return sqlResolver().resolve((SQLException) cause);
-        return Optional.empty();
+        return (cause instanceof SQLException) ?
+                sqlResolver().resolve((SQLException) cause) :
+                Optional.empty();
     }
 
     private RuntimeException handleCreateUpdateUserException(DataIntegrityViolationException ex) {
@@ -36,12 +37,18 @@ public record UserService(UserRepository userRepository) {
     }
 
     // User Methods
-    public Optional<User> findUserById(Long id) {
-        return userRepository.findById(id);
+    public User findUserById(Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty())
+            throw new UserNotFoundException("User with the id '%s' does not exist.".formatted(id));
+        return userOptional.get();
     }
 
-    public Optional<User> findUserByUsername(String username) {
-        return userRepository.findUserByUsername(username);
+    public User findUserByUsername(String username) {
+        Optional<User> userOptional = userRepository.findUserByUsername(username);
+        if (userOptional.isEmpty())
+            throw new UserNotFoundException("User with the username '%s' does not exist.".formatted(username));
+        return userOptional.get();
     }
 
     public User createUser(User user) {
