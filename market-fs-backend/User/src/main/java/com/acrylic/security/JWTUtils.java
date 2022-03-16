@@ -1,8 +1,7 @@
 package com.acrylic.security;
 
 import com.acrylic.entity.User;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 
 import java.util.Date;
 import java.util.Optional;
@@ -44,6 +43,17 @@ public class JWTUtils {
 //                .setExpiration(new Date(System.currentTimeMillis() + 604_800_000))
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
                 .compact();
+    }
+
+    public Optional<Jws<Claims>> parseToken(String token) {
+        try {
+            Jws<Claims> jws = Jwts.parser()
+                    .setSigningKey(JWT_SECRET)
+                    .parseClaimsJws(token);
+            return Optional.of(jws);
+        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException ex) {
+            return Optional.empty();
+        }
     }
 
 }
