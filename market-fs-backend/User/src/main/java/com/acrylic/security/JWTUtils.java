@@ -2,12 +2,14 @@ package com.acrylic.security;
 
 import com.acrylic.entity.User;
 import io.jsonwebtoken.*;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.Optional;
 
 import static java.lang.String.format;
 
+@Component
 public class JWTUtils {
 
     private final static String JWT_SECRET = "edk$#O3oE@OKk2oo3OK$RKIkiki3KIki3kJJURFU#uh4f83jufju3unfUHf838u3hrvj3juf3c 4v gd2f3f3de2shb546y5g53R#35T4G4AR5ijwdk2iI$Iikf3krfkerkfolgooykhki4fre3nufcb3493o4KFKdfrgMYD2yg54IJGTNUVNCVRWJM($4";

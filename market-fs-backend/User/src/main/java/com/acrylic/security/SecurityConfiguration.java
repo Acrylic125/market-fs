@@ -25,12 +25,12 @@ public class SecurityConfiguration
         extends WebSecurityConfigurerAdapter {
 
     private final UserService userService;
-//    private final JWTFilter jwtFilter;
+    private final JWTFilter jwtFilter;
 
     @Autowired
-    public SecurityConfiguration(UserService userService) {
+    public SecurityConfiguration(UserService userService, JWTFilter jwtFilter) {
         this.userService = userService;
-//        this.jwtFilter = jwtFilter;
+        this.jwtFilter = jwtFilter;
     }
 
     @Override
@@ -38,45 +38,45 @@ public class SecurityConfiguration
         auth.userDetailsService(userService::findUserByUsername);
     }
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        // Enable CORS and disable CSRF
-//        http = http.cors().and().csrf().disable()
-//                // Stateless Session
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                // Set unauthorized requests exception handler
-//                .exceptionHandling()
-//                .authenticationEntryPoint(
-//                        (request, response, ex) -> {
-//                            response.sendError(
-//                                    HttpServletResponse.SC_UNAUTHORIZED,
-//                                    ex.getMessage()
-//                            );
-//                        }
-//                )
-//                .and();
-//
-//        // Set permissions on endpoints
-//        http.authorizeRequests()
-//                // Our public endpoints
-//                .antMatchers("/api/public/**").permitAll()
-//                // Our private endpoints
-//                .anyRequest()
-//                .authenticated();
-//
-//        // Add JWT token filter
-//        http.addFilterBefore(
-//                jwtFilter,
-//                UsernamePasswordAuthenticationFilter.class
-//        );
-//    }
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // Enable CORS and disable CSRF
+        http = http.cors().and().csrf().disable()
+                // Stateless Session
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                // Set unauthorized requests exception handler
+                .exceptionHandling()
+                .authenticationEntryPoint(
+                        (request, response, ex) -> {
+                            response.sendError(
+                                    HttpServletResponse.SC_UNAUTHORIZED,
+                                    ex.getMessage()
+                            );
+                        }
+                )
+                .and();
+
+        // Set permissions on endpoints
+        http.authorizeRequests()
+                // Our public endpoints
+                .antMatchers("/api/public/**").permitAll()
+                // Our private endpoints
+                .anyRequest()
+                .authenticated();
+
+        // Add JWT token filter
+        http.addFilterBefore(
+                jwtFilter,
+                UsernamePasswordAuthenticationFilter.class
+        );
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
-//        return new BCryptPasswordEncoder();
+//        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
