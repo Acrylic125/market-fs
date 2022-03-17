@@ -1,11 +1,9 @@
-package com.acrylic.entity;
+package com.acrylic.dto;
 
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Indexed;
 
-import javax.management.relation.Role;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -1,6 +1,6 @@
 package com.acrylic.security;
 
-import com.acrylic.entity.User;
+import com.acrylic.dto.User;
 import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;
 

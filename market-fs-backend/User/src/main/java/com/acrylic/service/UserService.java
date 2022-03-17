@@ -2,7 +2,7 @@ package com.acrylic.service;
 
 import com.acrylic.db.SQLError;
 import com.acrylic.db.SQLStateErrorResolver;
-import com.acrylic.entity.User;
+import com.acrylic.dto.User;
 import com.acrylic.exceptions.UserDataSizeOutOfBoundsException;
 import com.acrylic.exceptions.UserDuplicateException;
 import com.acrylic.exceptions.UserNotFoundException;

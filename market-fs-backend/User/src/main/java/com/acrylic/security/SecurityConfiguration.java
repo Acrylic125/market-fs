@@ -60,17 +60,11 @@ public class SecurityConfiguration
 
         // Set permissions on endpoints
         http.authorizeRequests()
-                // Our public endpoints
-                .antMatchers("/api/public/**").permitAll()
-                // Our private endpoints
-                .anyRequest()
-                .authenticated();
+                .antMatchers("/api/v1/auth/**").permitAll()
+                .anyRequest().authenticated();
 
         // Add JWT token filter
-        http.addFilterBefore(
-                jwtFilter,
-                UsernamePasswordAuthenticationFilter.class
-        );
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
