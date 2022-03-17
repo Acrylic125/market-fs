@@ -1,4 +1,4 @@
-package controller;
+package com.acrylic.controller;
 
 import com.acrylic.entity.User;
 import com.acrylic.requests.UserRequestBody;

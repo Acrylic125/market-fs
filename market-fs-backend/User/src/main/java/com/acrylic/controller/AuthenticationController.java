@@ -1,4 +1,4 @@
-package controller;
+package com.acrylic.controller;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.RequestMapping;
