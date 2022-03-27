@@ -57,7 +57,6 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
         JWTUtils.JWTUserSubject subject = subjectOptional.get();
-
         UserDetails user = userService.findUserByUsername(subject.username());
 
         UsernamePasswordAuthenticationToken authentication =
